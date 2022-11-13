@@ -15,8 +15,8 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     spotify_id = db.Column(db.String, unique=True)
 
-    playlists = db.relationship("Playlist", back_populates="users")
-    visualizations = db.relationship("Visualization", back_populates="users")
+    playlists = db.relationship("Playlist", back_populates="user")
+    visualizations = db.relationship("Visualization", back_populates="user")
 
     def __repr__(self):
         return f"<User user_id={self.id} spotify_id={self.spotify_id}>"
@@ -64,7 +64,7 @@ class Genre(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String, nullable=False)
 
-    genres = db.relationship("Genre", secondary="track_genres", back_populates="track")
+    genres = db.relationship("Genre", secondary="track_genres", back_populates="tracks")
 
     def __repr__(self):
         return f"<Genre id={self.id} name={self.name}>"
@@ -83,7 +83,7 @@ class Track(db.Model):
     song_image_color = db.Column(db.String, nullable=False)
     playlist_id = db.Column(db.Integer, db.ForeignKey('playlists.id'), nullable=False)
 
-    tracks = db.relationship("Track", secondary="track_genres", back_populates="genre")
+    tracks = db.relationship("Track", secondary="track_genres", back_populates="genres")
 
     def __repr__(self):
         return f"<Track id={self.id} title={self.title} artist={self.artist}>"
