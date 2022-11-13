@@ -76,11 +76,11 @@ class Track(db.Model):
     __tablename__ = "tracks"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    artist = db.Column(db.String, nullable=False)
-    title = db.Column(db.String, nullable=False)
+    track_artist = db.Column(db.String, nullable=False)
+    track_title = db.Column(db.String, nullable=False)
     genre_name = db.Column(db.String, db.ForeignKey('genres.id'), nullable=False)
-    song_image = db.Column(db.String, nullable=False) 
-    song_image_color = db.Column(db.String, nullable=False)
+    track_image = db.Column(db.String, nullable=False) 
+    track_image_color = db.Column(db.String, nullable=False)
     playlist_id = db.Column(db.Integer, db.ForeignKey('playlists.id'), nullable=False)
 
     tracks = db.relationship("Track", secondary="track_genres", back_populates="genres")
