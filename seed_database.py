@@ -23,8 +23,7 @@ for playlist in playlist_data:
 
     url = playlist["title"]
     playlist_name = playlist["overview"]
-    for element in playlist["tracks"]:
-        track
+    playlist_tracks = playlist["tracks"]
 
     db_playlist = crud.create_playlist
     playlists_in_db.append(db_playlist)
