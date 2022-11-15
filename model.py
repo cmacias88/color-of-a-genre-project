@@ -49,6 +49,7 @@ class Playlist(db.Model):
     url = db.Column(db.String, nullable=False, unique=True)
     name = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    tracks = db.Column(db.Integer, db.ForeignKey('tracks.track_title'))
 
     user = db.relationship("User", back_populates="playlists")
 
@@ -62,7 +63,7 @@ class Genre(db.Model):
     __tablename__ = "genres"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    genre_name = db.Column(db.String, nullable=False)
 
     genres = db.relationship("Genre", secondary="track_genres", back_populates="tracks")
 
@@ -78,7 +79,7 @@ class Track(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     track_artist = db.Column(db.String, nullable=False)
     track_title = db.Column(db.String, nullable=False)
-    genre_name = db.Column(db.String, db.ForeignKey('genres.id'), nullable=False)
+    track_genre = db.Column(db.String, db.ForeignKey('genres.id'), nullable=False)
     track_image = db.Column(db.String, nullable=False) 
     track_image_color = db.Column(db.String, nullable=False)
     playlist_id = db.Column(db.Integer, db.ForeignKey('playlists.id'), nullable=False)
@@ -108,9 +109,10 @@ class VisualizationData(db.Model):
     __tablename__ = "visualization-data"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    genre_percentage = db.Column(db.FLOAT, nullable=False)
-    color_percentage = db.Column(db.FLOAT, nullable=False)
+    genre_percentages = db.Column(db.FLOAT, nullable=False)
+    most_common_color = db.Column(db.FLOAT, nullable=False)
     visualization_id = db.Column(db.String, db.ForeignKey('visualizations.id'), nullable=False)
+    playlist_id = db.Column(db.String, db.ForeignKey('playlists.id'), nullable=False)
 
     visualization = db.relationship("visualization", uselist=False, back_populates="visualization_data")
 
