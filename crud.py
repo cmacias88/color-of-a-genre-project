@@ -22,7 +22,10 @@ def create_playlist(url, playlist_name, user_id, tracks):
 def create_track(track_title, track_genre, playlist_id, track_artist, track_image, track_image_color):
     """Create a track."""
 
-    return Track(track_title=track_title, 
+    if track_title in Track and track_artist in Track: 
+        pass
+    else:
+        return Track(track_title=track_title, 
                 track_genre=track_genre,
                 track_artist=track_artist, 
                 track_image=track_image,
@@ -30,10 +33,38 @@ def create_track(track_title, track_genre, playlist_id, track_artist, track_imag
                 playlist_id=playlist_id)
 
 
+def get_all_tracks(playlist_id):
+    """Gives all tracks from a playlist."""
+
+    p = Playlist.query.filter(Playlist.id == playlist_id)
+
+    return p.tracks
+
+
 def create_genre(genre_name):
     """Create a genre."""
 
-    return Genre(genre_name)
+    if genre_name in Genre:
+        pass 
+    else: 
+        return Genre(genre_name)
+
+
+def get_all_genres():
+    """Gives all genres."""
+
+    return Genre.query.all()
+
+
+def create_visualization_data(playlist_id, visualization_id, genre_percentages, most_common_color):
+    """Create visualization data from a playlist."""
+
+    return VisualizationData(
+        playlist_id=playlist_id,
+        visualization_id=visualization_id,
+        genre_percentages=genre_percentages, 
+        most_common_color=most_common_color 
+    )
 
 
 def create_visualization(user_id, playlist_id, visualization_data):
@@ -42,7 +73,7 @@ def create_visualization(user_id, playlist_id, visualization_data):
     return Visualization(
         user_id=user_id,
         playlist_id=playlist_id,
-        visualization_data=visualization_data
+        visualization_data_=visualization_data
     )
 
 
@@ -56,17 +87,6 @@ def get_visualization_by_playlist(playlist_id):
     """Gives visualization for a certain playlist."""
 
     return Visualization.query.filter(Visualization.playlist_id == playlist_id).first()
-
-
-def create_visualization_data(playlist_id, visualization_id, genre_percentages, most_common_color):
-    """Create visualization data from a playlist."""
-
-    return VisualizationData(
-        playlist_id=playlist_id,
-        visualization_id=visualization_id,
-        genre_percentages=genre_percentages, 
-        most_common_color=most_common_color 
-    )
 
 
 if __name__ == '__main__':
