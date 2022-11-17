@@ -64,7 +64,7 @@ class Playlist(db.Model):
 
 
 class PlaylistTrack(db.Model):
-    """The playlist for a given track."""
+    """The tracks belonging in a playlist."""
 
     __tablename__ = "playlist_tracks"
 
@@ -73,7 +73,7 @@ class PlaylistTrack(db.Model):
     track = db.Column(db.String, db.ForeignKey('tracks.track_id'), nullable=False)
 
     def __repr__(self):
-        return f"<TrackGenre id={self.playlisttrack_id} genre={self.playlist} track={self.track}>"
+        return f"<PlaylistTrack id={self.playlisttrack_id} playlist={self.playlist} track={self.track}>"
 
 
 class Genre(db.Model):
@@ -133,7 +133,7 @@ class TrackVisualization(db.Model):
     track = db.Column(db.String, db.ForeignKey('tracks.track_id'), nullable=False)
 
     def __repr__(self):
-        return f"<TrackGenre id={self.trackvisualization_id} genre={self.visualization} track={self.track}>"
+        return f"<TrackVisualization id={self.trackvisualization_id} visualization={self.visualization} track={self.track}>"
 
 
 class VisualizationData(db.Model):

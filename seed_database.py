@@ -29,6 +29,9 @@ for playlist in playlist_data:
     playlists_in_db.append(db_playlist)
 
 
+# If track exists, don't add to track table 
+# Must be added to playlisttrack
+
 model.db.session.add_all(playlists_in_db)
 model.db.session.commit()
 
@@ -39,5 +42,15 @@ for n in range(5):
 
     user = crud.create_user(username, password)
     model.db.session.add(user)
+
+
+genre_list = [
+    "rock", "indie", "pop", "country", "rap", "hip hop", "jazz", 
+    "classical", "metal", "alternative", "folk", "house", "punk"
+    ]
+    
+for genre in genre_list:
+    genre = crud.create_genre(genre_name)
+    model.db.session.add(genre)
 
 model.db.session.commit()
