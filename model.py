@@ -49,7 +49,7 @@ class Playlist(db.Model):
     __tablename__ = "playlists"
 
     playlist_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    playlist_url = db.Column(db.String, nullable=False, unique=True)
+    playlist_uri = db.Column(db.String, nullable=False, unique=True)
     playlist_name = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     visualization_id = db.Column(db.Integer, db.ForeignKey('visualization.visualization_id'))
@@ -143,7 +143,7 @@ class VisualizationData(db.Model):
 
     visualizationdata_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     genre_percentages = db.Column(db.FLOAT, nullable=False)
-    most_common_color = db.Column(db.FLOAT, nullable=False)
+    genre_most_common_color = db.Column(db.List, nullable=False)
     visualization_id = db.Column(db.String, db.ForeignKey('visualizations.visualization_id'), nullable=False)
     playlist_id = db.Column(db.String, db.ForeignKey('playlists.playlist_id'), nullable=False)
 

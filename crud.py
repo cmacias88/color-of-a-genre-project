@@ -13,16 +13,26 @@ def get_all_users():
     return User.query.all()
 
 
-def create_playlist(playlist_url, playlist_name, user_id, tracks):
+def create_playlist(playlist_uri, playlist_name, tracks):
     """Create a playlist."""
 
-    playlist_given = Playlist.query.filter(Playlist.playlist_url == playlist_url)
+    playlist_given = Playlist.query.filter(Playlist.playlist_uri == playlist_uri)
 
     if playlist_given == None:
-        return Playlist(playlist_url=playlist_url, playlist_name=playlist_name, user_id=user_id, tracks=tracks)
+        return Playlist(playlist_url=playlist_uri, playlist_name=playlist_name, tracks=tracks)
 
 
-def create_track(track_title, track_genre, playlist_id, track_artist, track_image, track_image_color):
+def update_playlist(track_id, playlist_uri):
+    """Update playlist with a track."""
+
+    playlist = Playlist.query.filter(Playlist.playlist_uri == playlist_uri).first()
+
+    if track_id not in playlist.tracks:
+        return PlaylistTrack(playlist_id=playlist.playlist_id,
+                            track_id=track_id)
+
+
+def create_track(track_title, track_genre, track_artist, track_image, track_image_color, playlist_uri,):
     """Create a track."""
 
     if track_title in Track and track_artist in Track: 
@@ -33,25 +43,21 @@ def create_track(track_title, track_genre, playlist_id, track_artist, track_imag
                 track_artist=track_artist, 
                 track_image=track_image,
                 track_image_color=track_image_color,
-                playlist_id=playlist_id)
-
-
-def update_playlist(track_id, playlist_id):
-    """Update playlist with a track."""
-
-    playlist = Playlist.query.filter(Playlist.playlist_id == playlist.id).first()
-
-    if track_id not in playlist.tracks:
-        return PlaylistTrack(playlist_id=playlist_id,
-                            track_id=track_id)
+                playlist_uri=playlist_uri)
 
 
 def get_all_tracks(playlist_id):
     """Gives all tracks from a playlist."""
 
-    p = Playlist.query.filter(Playlist.id == playlist_id)
+    playlist = Playlist.query.filter(Playlist.playlist_id == playlist_id)
 
-    return p.tracks
+    return playlist.tracks
+
+
+def create_track_genre(track_id):
+    """Gives track a genre."""
+
+    track = Track.query.filter(Track.track_id == track_id)
 
 
 def create_genre(genre_name):
@@ -72,12 +78,32 @@ def get_all_genres():
     return Genre.query.all()
 
 
-def create_visualization_data(playlist_id, visualization_id, genre_percentages, most_common_color):
+def create_visualization_data(playlist_uri):
     """Create visualization data from a playlist."""
 
+    playlist = Playlist.query.filter(Playlist.playlist_uri == playlist_uri).first()
+
+    tracks = playlist.tracks
+    track_nums = len(tracks)
+
+    track_genre_count = {}
+
+    for track in tracks:
+        track_genre = track.trackgenre_id 
+        if not track_genre:
+            track_genre_count[track_genre] = 1
+        else: 
+            track_genre_count[track_genre] += 1 
+
+    genre_percentages = []
+
+    for genre_name, genre_tally in track_genre_count.items():
+        genre_percentages.append({genre_name: (genre_tally/track_nums)})
+
+    for track in tracks:
+        track.
+
     return VisualizationData(
-        playlist_id=playlist_id,
-        visualization_id=visualization_id,
         genre_percentages=genre_percentages, 
         most_common_color=most_common_color 
     )
