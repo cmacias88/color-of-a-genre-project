@@ -15,6 +15,7 @@ os.system('createdb visualplaylist')
 model.connect_to_db(server.app)
 model.db.create_all()
 
+
 for n in range(5):
     username = f'user{n}'
     password = 'test'
@@ -36,13 +37,12 @@ for genre_name in genre_list:
 with open('data/playlists.json') as f:
     playlist_data = json.loads(f.read())
 
-
 playlists_in_db = []
 tracks_in_db = []
 
 for playlist in playlist_data:
 
-    playlist_uri = playlist["playliast_uri"]
+    playlist_uri = playlist["playlist_uri"]
     playlist_name = playlist["playlist_name"]
     for track in playlist["tracks"]:
         track_title, track_genre, track_artist, track_image = playlist["tracks"]

@@ -13,30 +13,33 @@ def get_all_users():
     return User.query.all()
 
 
-def create_playlist(playlist_uri, playlist_name, tracks):
+def create_playlist(playlist_uri, playlist_name):
     """Create a playlist."""
 
     playlist_given = Playlist.query.filter(Playlist.playlist_uri == playlist_uri)
 
     if playlist_given == None:
-        return Playlist(playlist_url=playlist_uri, playlist_name=playlist_name, tracks=tracks)
+        return Playlist(playlist_url=playlist_uri, playlist_name=playlist_name)
+    return playlist_given
 
 
-def update_playlist(track_id, playlist_uri):
-    """Update playlist with a track."""
+def add_track_to_playlist(track_id, playlist_id):
+    """Add track to a playlist."""
 
-    playlist = Playlist.query.filter(Playlist.playlist_uri == playlist_uri).first()
+    playlist_track = PlaylistTrack.query.filter(PlaylistTrack.playlist_id == playlist_id, PlaylistTrack.track_id == track_id).first()
 
-    if track_id not in playlist.tracks:
-        return PlaylistTrack(playlist_id=playlist.playlist_id,
+    if not playlist_track:
+        return PlaylistTrack(playlist_id=playlist_id,
                             track_id=track_id)
+    return playlist_track
 
 
-def create_track(track_title, track_genre, track_artist, track_image, track_image_color, playlist_uri,):
+def create_track(track_title, track_genre, track_artist, track_image, track_image_color, playlist_uri):
     """Create a track."""
 
     if track_title in Track and track_artist in Track: 
         pass 
+    # Change to filter for Track and if these exist within object as instances 
     else:
         return Track(track_title=track_title, 
                 track_genre=track_genre,
@@ -54,22 +57,14 @@ def get_all_tracks(playlist_id):
     return playlist.tracks
 
 
-def create_track_genre(track_id):
-    """Gives track a genre."""
-
-    track = Track.query.filter(Track.track_id == track_id)
-
-
 def create_genre(genre_name):
     """Create a genre."""
 
-    def find_genre(genre_name):
-        if genre_name in db.session.query.filter(Genre.genre_name).all():
-            genre_name = db.session.query.filter(Genre.genre_name) 
-        return genre_name 
+    genre_name = Genre.query.filter(Genre.genre_name == genre_name).first()
 
-    if genre_name != find_genre(genre_name):
+    if not genre_name: 
         return Genre(genre_name)
+    return genre_name
 
 
 def get_all_genres():
@@ -87,25 +82,27 @@ def create_visualization_data(playlist_uri):
     track_nums = len(tracks)
 
     track_genre_count = {}
+    track_genre_color = {}
 
     for track in tracks:
-        track_genre = track.trackgenre_id 
-        if not track_genre:
+        track_genre = track.genre.name
+        if not track_genre in track_genre_count:
             track_genre_count[track_genre] = 1
         else: 
             track_genre_count[track_genre] += 1 
 
-    genre_percentages = []
-
-    for genre_name, genre_tally in track_genre_count.items():
-        genre_percentages.append({genre_name: (genre_tally/track_nums)})
-
     for track in tracks:
-        track.
+        track_genre = track.genre.name
+        if not track_genre in track_genre_color:
+            track_genre_color[track_genre] = []
+        track_genre_color[track_genre].append(track.track_image_color)
+
+    # Need one visualization for the VisualizationData  
+    # find library for sorting colors 
 
     return VisualizationData(
-        genre_percentages=genre_percentages, 
-        most_common_color=most_common_color 
+        genre_percentage=genre_percentage, 
+        genre_most_common_color=genre_most_common_color 
     )
 
 
