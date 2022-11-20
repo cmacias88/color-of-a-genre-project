@@ -26,9 +26,14 @@ function Homepage(props) {
     return (
     <React.Fragment>
     <h1>Welcome!</h1>
-    
-    <li><Link to="/log-in">Log In</Link></li>
-    <li><Link to="/sign-up">Sign Up</Link></li>
+    <p>
+        Become a user and link your Spotify account to see a visualization of:
+            <li>the percentage of genres in a playlist of your choosing</li>
+	        <li>the most common colors of albums in those given genres</li>
+    </p>
+    <li><Link to="/log-in">Already have an account? Log In Here</Link></li>
+    <li><Link to="/sign-up">Want to save your visualizations? Sign Up Here</Link></li>
+    <li><Link to="/playlist-selection">Or simply generate a visualization with a public playlist!</Link></li>
     </React.Fragment>
     )
 }
@@ -37,6 +42,15 @@ function Homepage(props) {
 function Welcome(props) {
     return (
     <p>Welcome {props.username}!</p>
+    )
+}
+
+
+function SignUpButton() {
+    return (
+        <button type="button" onSubmit={SignUpForm}>
+        Sign Up
+        </button>
     )
 }
 
@@ -51,29 +65,60 @@ function LogInButton() {
 
 
 function UserSignUp() {
-    return (
-        <div className="form">
+    return(
+    <React.Fragment>
         <form>
-            <input type="text" name="username"></input>
-            <input type="password" name="password"></input>
-            <input type="submit"></input>
+        <h1>Sign Up</h1>
+            <div>
+                <label>First Name</label>
+                    <input type="text"/>
+            </div>
+            <div>
+                <label>Last Name</label>
+                    <input type="text"/>
+            </div>
+            <div>
+                <label>Username</label>
+                    <input type="text"/>
+            </div>
+            <div>
+                <label>Password</label>
+                    <input type="password"/>
+            </div>
+            <div>
+                <SignUpButton />
+            </div>
+            <p>
+                Already registered? <a href="/log-in">Log In</a>
+            </p>
         </form>
-        </div>
+    </React.Fragment>
     )
-}
+};
 
-
-function UserLogin() {
-    return (
-        <div className="form">
+function UserLogIn() {
+    return(
+    <React.Fragment>
         <form>
-            <input type="text" name="username"></input>
-            <input type="password" name="password"></input>
-            <input type="submit"></input>
+        <h1>Log In</h1>
+            <div>
+                <label>Username</label>
+                    <input type="text"/>
+            </div>
+            <div>
+                <label>Password</label>
+                    <input type="password"/>
+            </div>
+            <div>
+                <LogInButton />
+            </div>
+            <p>
+                Don't have an account? <a href="/sign-up">Sign Up</a>
+            </p>
         </form>
-        </div>
+    </React.Fragment>
     )
-}
+};
 
 
 function App() {
@@ -82,7 +127,6 @@ function App() {
             <Navbar />
                 <ReactRouterDOM.Route exact path="/">
                     <Homepage />
-                    <SearchBar />
                 </ReactRouterDOM.Route>
                 <ReactRouterDOM.Route exact path="/sign-up">
                     <UserSignUp />
@@ -103,7 +147,6 @@ function App() {
                     <SpotifyAuth />
                 </ReactRouterDOM.Route>
         </ReactRouterDOM.BrowserRouter>
-
     );
 }
 

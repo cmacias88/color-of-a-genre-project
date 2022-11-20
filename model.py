@@ -11,6 +11,8 @@ class User(db.Model):
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    fname = db.Column(db.String, nullable=False)
+    lname = db.Column(db.String, nullable=False)
     username = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
     spotify_id = db.Column(db.String, unique=True)
@@ -19,7 +21,7 @@ class User(db.Model):
     visualizations = db.relationship("Visualization", back_populates="user")
 
     def __repr__(self):
-        return f"<User user_id={self.user_id} username={self.username}>"
+        return f"<User user_id={self.user_id} user={self.fname} {self.lname} username={self.username}>"
 
 
 class Visualization(db.Model):
@@ -91,7 +93,7 @@ class Genre(db.Model):
 
 
 class Track(db.Model):
-    """A single track in a playlist."""
+    """A single track."""
 
     __tablename__ = "tracks"
 
@@ -142,8 +144,9 @@ class VisualizationData(db.Model):
     __tablename__ = "visualization-data"
 
     visualizationdata_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    genre_percentages = db.Column(db.FLOAT, nullable=False)
-    genre_most_common_color = db.Column(db.List, nullable=False)
+    genre_percentage = db.Column(db.FLOAT, nullable=False)
+    genre_most_common_color = db.Column(db.String, nullable=False)
+    genre_id = db.column(db.Integer, db.ForeignKey('genres.genre_id'), nullable=False)
     visualization_id = db.Column(db.String, db.ForeignKey('visualizations.visualization_id'), nullable=False)
     playlist_id = db.Column(db.String, db.ForeignKey('playlists.playlist_id'), nullable=False)
 
