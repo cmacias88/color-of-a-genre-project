@@ -13,6 +13,12 @@ def get_all_users():
     return User.query.all()
 
 
+def get_user_by_username(username, password):
+    """Gives user via their username."""
+
+    return User.query.filter(User.username == username and User.password == password).first()
+
+
 def create_playlist(playlist_uri, playlist_name):
     """Create a playlist."""
 
@@ -100,10 +106,10 @@ def create_visualization_data(playlist_uri):
     # Need one visualization for the VisualizationData  
     # find library for sorting colors 
 
-    return VisualizationData(
-        genre_percentage=genre_percentage, 
-        genre_most_common_color=genre_most_common_color 
-    )
+    # return VisualizationData(
+    #     genre_percentage=genre_percentage, 
+    #     genre_most_common_color=genre_most_common_color 
+    # )
 
 
 def create_visualization(user_id, playlist_id, visualization_data):

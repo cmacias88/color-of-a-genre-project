@@ -2,7 +2,7 @@ const Link = ReactRouterDOM.Link;
 const Route = ReactRouterDOM.Route;
 
 
-function NavBar (props) {
+function NavBar () {
     return (
         <nav>
             <ReactRouterDOM.Link to="/" className="navbar">
@@ -22,129 +22,160 @@ function NavBar (props) {
 }
 
 
-function Homepage(props) {
+function Homepage() {
     return (
     <React.Fragment>
     <h1>Welcome!</h1>
+
     <p>
         Become a user and link your Spotify account to see a visualization of:
             <li>the percentage of genres in a playlist of your choosing</li>
 	        <li>the most common colors of albums in those given genres</li>
     </p>
-    <li><Link to="/log-in">Already have an account? Log In Here</Link></li>
-    <li><Link to="/sign-up">Want to save your visualizations? Sign Up Here</Link></li>
-    <li><Link to="/playlist-selection">Or simply generate a visualization with a public playlist!</Link></li>
+
+    <div>
+        <li><Link to="/log-in">Already have an account? Log In Here</Link></li>
+        <li><Link to="/sign-up">Want to save your visualizations? Sign Up Here</Link></li>
+        <li><Link to="/playlist-selection">Or simply generate a visualization with a public playlist!</Link></li>
+    </div>
     </React.Fragment>
     )
 }
 
 
-function Welcome(props) {
+function Dashboard({user}) {
     return (
-    <p>Welcome {props.username}!</p>
+    <p>Welcome back {user.username}!</p>
     )
 }
 
 
-function SignUpButton() {
-    return (
-        <button type="button" onSubmit={SignUpForm}>
-        Sign Up
-        </button>
-    )
-}
-
-
-function LogInButton() {
-    return (
-        <button type="button" onSubmit={LogInForm}>
-        Log In
-        </button>
-    )
-}
-
-
-function UserSignUp() {
+function UserSignUp({handleSubmit, setUser}) {
     return(
     <React.Fragment>
-        <form>
+        <form id="sign-up" onSubmit={handleSubmit}>
         <h1>Sign Up</h1>
             <div>
                 <label>First Name</label>
-                    <input type="text"/>
+                    <input type="text" onChange={(evt) => setUser({ ...user, fname: evt.target.value })}/>
             </div>
             <div>
                 <label>Last Name</label>
-                    <input type="text"/>
+                    <input type="text" onChange={(evt) => setUser({ ...user, lname: evt.target.value })}/>
             </div>
             <div>
                 <label>Username</label>
-                    <input type="text"/>
+                    <input type="text" onChange={(evt) => setUser({ ...user, username: evt.target.value })}/>
             </div>
             <div>
                 <label>Password</label>
-                    <input type="password"/>
+                    <input type="password" onChange={(evt) => setUser({ ...user, password: evt.target.value })}/>
             </div>
             <div>
-                <SignUpButton />
+                <input type="submit" value="Sign Up"/>
             </div>
-            <p>
-                Already registered? <a href="/log-in">Log In</a>
-            </p>
         </form>
+        <p>
+            <Link to="/log-in">Already registered?</Link>
+        </p>
     </React.Fragment>
     )
 };
 
-function UserLogIn() {
+
+function UserLogIn({handleSubmit, setUsername, setPassword}) {
     return(
     <React.Fragment>
-        <form>
+        <form id="log-in" onSubmit={handleSubmit}>
         <h1>Log In</h1>
             <div>
                 <label>Username</label>
-                    <input type="text"/>
+                    <input type="text" id="username" onChange={(evt) => setUsername({ ...user, username: evt.target.value })}/>
             </div>
             <div>
                 <label>Password</label>
-                    <input type="password"/>
+                    <input type="password" id="password" onChange={(evt) => setPassword({ ...user, password: evt.target.value })}/>
             </div>
             <div>
-                <LogInButton />
+                <input type="submit" value="Log In"/>
             </div>
-            <p>
-                Don't have an account? <a href="/sign-up">Sign Up</a>
-            </p>
         </form>
+        <p>
+            <Link to="/sign-up">Don't have an account?</Link>
+        </p>
     </React.Fragment>
     )
 };
 
 
+
 function App() {
+
+    const [loggedIn, setLoggedIn] = React.useState(false)
+
+    const [user, setUser] = React.useState({fname: "",
+                                            lname: "",
+                                            username: "",
+                                            password: "" });
+
+
+    const handleSignUpSubmit = (evt) => {
+        evt.preventDefault();
+        fetch('/api/sign-up', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify(user)
+            })
+        .then((response) => response.json())
+        .then((user_info) => {if (user_info.username) {
+            setLoggedIn(true);
+            };
+        });
+    };
+
+
+    const handleLogInSubmit = (evt) => {
+        evt.preventDefault();
+        fetch('/api/log-in', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify(user)
+            })
+        .then((response) => response.json())
+        .then((user_info) => {if (user_info.username) {
+            setUser({fname: user_info.fname,
+                    lname: user_info.lname,
+                    username: user_info.username,
+                    password: user_info.password})
+            setLoggedIn(true);
+            };
+        });
+    };
+
+
     return (
         <ReactRouterDOM.BrowserRouter>
-            <Navbar />
+            <NavBar />
                 <ReactRouterDOM.Route exact path="/">
                     <Homepage />
                 </ReactRouterDOM.Route>
                 <ReactRouterDOM.Route exact path="/sign-up">
-                    <UserSignUp />
+                    <UserSignUp handleSubmit={handleSignUpSubmit} />
                 </ReactRouterDOM.Route>
                 <ReactRouterDOM.Route exact path="/log-in">
-                    <UserLogin />
+                    <UserLogIn handleSubmit={handleLogInSubmit} />
                 </ReactRouterDOM.Route>
                 <ReactRouterDOM.Route exact path="/user-profile">
-                    <UserProfile />
+                    {/* <UserProfile /> */}
                 </ReactRouterDOM.Route>
                 <ReactRouterDOM.Route exact path="/playlist-selection">
-                    <PlaylistSelction />
+                    {/* <PlaylistSelction /> */}
                 </ReactRouterDOM.Route>
                 <ReactRouterDOM.Route exact path="/visualization-generator">
-                    <VisualizationGenerator />
+                    {/* <VisualizationGenerator /> */}
                 </ReactRouterDOM.Route>
                 <ReactRouterDOM.Route exact path="/spotify-authorization">
-                    <SpotifyAuth />
+                    {/* <SpotifyAuth /> */}
                 </ReactRouterDOM.Route>
         </ReactRouterDOM.BrowserRouter>
     );

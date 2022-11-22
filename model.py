@@ -87,6 +87,7 @@ class Genre(db.Model):
     genre_name = db.Column(db.String, nullable=False)
 
     tracks = db.relationship("Track", secondary="track_genres", back_populates="genre")
+    visualization_datas = db.relationship("Visualization", back_populates="genres")
 
     def __repr__(self):
         return f"<Genre id={self.genre_id} name={self.genre_name}>"
@@ -146,11 +147,12 @@ class VisualizationData(db.Model):
     visualizationdata_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     genre_percentage = db.Column(db.FLOAT, nullable=False)
     genre_most_common_color = db.Column(db.String, nullable=False)
-    genre_id = db.column(db.Integer, db.ForeignKey('genres.genre_id'), nullable=False)
+    genre_id = db.column(db.Integer, db.ForeignKey('genres.genre_id'))
     visualization_id = db.Column(db.String, db.ForeignKey('visualizations.visualization_id'), nullable=False)
     playlist_id = db.Column(db.String, db.ForeignKey('playlists.playlist_id'), nullable=False)
 
     visualization = db.relationship("visualization", uselist=False, back_populates="visualization_data")
+    genres = db.relationship("Genre", back_populates="visualization_datas")
 
     def __repr__(self):
         return f"<Visualization Data id={self.visualizationdata_id} visualization_id={self.visualization_id}>"
