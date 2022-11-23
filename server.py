@@ -1,6 +1,12 @@
 from flask import Flask, session, render_template, request, jsonify, flash, redirect
 from model import db, User, Visualization, Playlist, PlaylistTrack, Genre, Track, TrackGenre, TrackVisualization, VisualizationData, connect_to_db
 import crud
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+from colorthief import ColorThief
+
+auth_manager = SpotifyClientCredentials()
+sp = spotipy.Spotify(auth_manager=auth_manager)
 
 
 app = Flask(__name__)
@@ -15,7 +21,6 @@ def home():
 @app.route('/api/sign-up', methods=['POST'])
 def make_user_account():
     """Creates a user."""
-
 
     fname = request.post.json('fname')
     lname = request.post.json('lname')
@@ -68,13 +73,62 @@ def get_users_json():
     return jsonify({'users': users})
 
 
-@app.route("/api/genres")
+@app.route('/api/genres')
 def get_all_genres_json():
     """Return a JSON response with all genres."""
 
     genres = crud.get_all_genres()
 
     return jsonify({'genres': genres})
+
+
+@app.route('/api/playlist-selection', methods=['POST'])
+def make_playlist():
+    """Creates a playlist."""
+
+    playlist_link = request.post.json('playlist_link')
+
+    user_playlist = sp.playlist(playlist_link)
+
+    playlist_name = user_playlist['name']
+    playlist_uri : user_playlist['uri'] 
+    tracks = []
+        
+    result = sp.playlist_tracks(playlist['playlist_uri'])
+            
+    for element in result['items']:
+        track = element['track']
+        artist_info = sp.artist(track['artists'][0]['href'])
+        track_info = {'track_title': track['name'],
+        'track_genre' : artist_info['genres'][0],
+        'track_artist': track['artists'][0]['name'],
+        'track_image': track['album']['images'][0]['url']}
+        tracks.append(track_info)
+
+    playlist = crud.create_playlist(playlist_uri=playlist_uri,
+                                    playlist_name=playlist_name,
+                                    )
+
+    db.session.add(playlist)
+
+    for track in playlist['tracks']:  
+        track_title = track['name']
+        track_genre = track['genre']
+        track_artist = track['track_artist']
+        track_image = track['track_image']
+        color_thief = ColorThief(track_image)
+        track_image_color = color_thief.get_color(quality=1)
+        track = crud.create_track(track_title, track_genre, track_artist, track_image, track_image_color, playlist_uri)
+        db.session.add(track)
+    
+    db.session.commit()
+
+    flash('Your playlist has been processed.')
+
+    return jsonify({'playlist_uri': playlist_uri,
+                    'playlist_name': playlist_name,
+                    'tracks': tracks
+                    })
 
 
 if __name__ == "__main__":

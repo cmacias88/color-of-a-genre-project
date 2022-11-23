@@ -111,9 +111,9 @@ function PlaylistInput({handleSubmit, setPlaylist}) {
     return(
         <React.Fragment>
             <form id="playlist-input" onSubmit={handleSubmit}>
-            <h1>Provide a Playlist</h1>
+            <h1>Provide a Playlist Link</h1>
                 <div>
-                    <label>Username</label>
+                    <label>Public Playlist Link</label>
                         <input type="text" id="playlist-link" onChange={(evt) => setPlaylist({ ...playlist, playlist_link: evt.target.value })}/>
                 </div>
             </form>
@@ -173,11 +173,11 @@ function App() {
         fetch('/api/playlist-selection', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify(playlist)
+            body: JSON.stringify(playlist_link)
             })
         .then((response) => response.json())
         .then((playlist) => {if (playlist.playlist_link) {
-            setPlaylist({playlist_uri : playlist.playlist_link})
+            setPlaylist({playlist : playlist.playlist_link})
             };
         });
     };
