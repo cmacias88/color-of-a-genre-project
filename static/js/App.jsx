@@ -107,6 +107,20 @@ function UserLogIn({handleSubmit, setUsername, setPassword}) {
     )
 };
 
+function PlaylistInput({handleSubmit, setPlaylist}) {
+    return(
+        <React.Fragment>
+            <form id="playlist-input" onSubmit={handleSubmit}>
+            <h1>Provide a Playlist</h1>
+                <div>
+                    <label>Username</label>
+                        <input type="text" id="playlist-link" onChange={(evt) => setPlaylist({ ...playlist, playlist_link: evt.target.value })}/>
+                </div>
+            </form>
+        </React.Fragment>
+
+    )
+};
 
 
 function App() {
@@ -117,6 +131,8 @@ function App() {
                                             lname: "",
                                             username: "",
                                             password: "" });
+
+    const [playlist, setPlaylist] = React.useState({playlist_link: ""});
 
 
     const handleSignUpSubmit = (evt) => {
@@ -152,6 +168,20 @@ function App() {
         });
     };
 
+    const handlePlaylistSubmit = (evt) => {
+        evt.preventDefault();
+        fetch('/api/playlist-selection', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify(playlist)
+            })
+        .then((response) => response.json())
+        .then((playlist) => {if (playlist.playlist_link) {
+            setPlaylist({playlist_uri : playlist.playlist_link})
+            };
+        });
+    };
+
 
     return (
         <ReactRouterDOM.BrowserRouter>
@@ -169,7 +199,7 @@ function App() {
                     {/* <UserProfile /> */}
                 </ReactRouterDOM.Route>
                 <ReactRouterDOM.Route exact path="/playlist-selection">
-                    {/* <PlaylistSelction /> */}
+                    <PlaylistInput handleSubmit={handlePlaylistSubmit}/>
                 </ReactRouterDOM.Route>
                 <ReactRouterDOM.Route exact path="/visualization-generator">
                     {/* <VisualizationGenerator /> */}
