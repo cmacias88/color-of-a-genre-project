@@ -1,10 +1,10 @@
 from model import db, User, Visualization, Playlist, PlaylistTrack, Genre, Track, TrackGenre, TrackVisualization, VisualizationData, connect_to_db
 
 
-def create_user(username, password):
+def create_user(fname, lname, username, password):
     """Create and return a new user."""
 
-    return User(username=username, password=password)
+    return User(fname=fname, lname=lname, username=username, password=password)
 
 
 def get_all_users():
@@ -22,10 +22,10 @@ def get_user_by_username(username, password):
 def create_playlist(playlist_uri, playlist_name):
     """Create a playlist."""
 
-    playlist_given = Playlist.query.filter(Playlist.playlist_uri == playlist_uri)
+    playlist_given = Playlist.query.filter(Playlist.playlist_uri == playlist_uri).first()
 
     if playlist_given == None:
-        return Playlist(playlist_url=playlist_uri, playlist_name=playlist_name)
+        return Playlist(playlist_uri=playlist_uri, playlist_name=playlist_name)
     return playlist_given
 
 
@@ -43,9 +43,10 @@ def add_track_to_playlist(track_id, playlist_id):
 def create_track(track_title, track_genre, track_artist, track_image, track_image_color, playlist_uri):
     """Create a track."""
 
-    if track_title in Track and track_artist in Track: 
-        pass 
-    # Change to filter for Track and if these exist within object as instances 
+    track = Track.query.filter(Track.track_title == track_title, Track.track_artist == track_artist).first()
+
+    if track: 
+        return track
     else:
         return Track(track_title=track_title, 
                 track_genre=track_genre,
@@ -66,11 +67,11 @@ def get_all_tracks(playlist_id):
 def create_genre(genre_name):
     """Create a genre."""
 
-    genre_name = Genre.query.filter(Genre.genre_name == genre_name).first()
+    genre = Genre.query.filter(Genre.genre_name == genre_name).first()
 
-    if not genre_name: 
-        return Genre(genre_name)
-    return genre_name
+    if not genre: 
+        return Genre(genre_name = genre_name)
+    return genre
 
 
 def get_all_genres():
@@ -112,32 +113,32 @@ def create_visualization_data(playlist_uri):
     # )
 
 
-def create_visualization(user_id, playlist_id, visualization_data):
-    """Create and return a new visualization."""
+# def create_visualization(user_id, playlist_id, visualization_data):
+#     """Create and return a new visualization."""
 
-    return Visualization(
-        user_id=user_id,
-        playlist_id=playlist_id,
-        visualization_data_=visualization_data
-    )
-
-
-def get_all_user_visualizations(user_id):
-    """Gives all visualizations under a certain user."""
-
-    return Visualization.query.filter(Visualization.user_id == user_id).all()
+#     return Visualization(
+#         user_id=user_id,
+#         playlist_id=playlist_id,
+#         visualization_data_=visualization_data
+#     )
 
 
-def get_visualization_by_playlist(playlist_id):
-    """Gives visualization for a certain playlist."""
+# def get_all_user_visualizations(user_id):
+#     """Gives all visualizations under a certain user."""
 
-    return Visualization.query.filter(Visualization.playlist_id == playlist_id).first()
+#     return Visualization.query.filter(Visualization.user_id == user_id).all()
 
 
-def get_visualization_data_for_visualization(visualization_id):
-    """Gives visualization data for a certain visualization."""
+# def get_visualization_by_playlist(playlist_id):
+#     """Gives visualization for a certain playlist."""
 
-    return VisualizationData.query.filter(VisualizationData.visualization_id == visualization_id).first()
+#     return Visualization.query.filter(Visualization.playlist_id == playlist_id).first()
+
+
+# def get_visualization_data_for_visualization(visualization_id):
+#     """Gives visualization data for a certain visualization."""
+
+#     return VisualizationData.query.filter(VisualizationData.visualization_id == visualization_id).first()
 
 
 if __name__ == '__main__':

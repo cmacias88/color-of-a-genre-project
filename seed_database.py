@@ -3,6 +3,7 @@
 import os
 import json
 from random import choice, randint
+import colorsys 
 from colorthief import ColorThief
 
 import crud
@@ -17,10 +18,12 @@ model.db.create_all()
 
 
 for n in range(5):
+    fname = f'Test{n}'
+    lname = f'Test{n}'
     username = f'user{n}'
     password = 'test'
 
-    user = crud.create_user(username, password)
+    user = crud.create_user(fname, lname, username, password)
     model.db.session.add(user)
 
 
@@ -45,10 +48,22 @@ for playlist in playlist_data:
     playlist_uri = playlist["playlist_uri"]
     playlist_name = playlist["playlist_name"]
     for track in playlist["tracks"]:
-        track_title, track_genre, track_artist, track_image = playlist["tracks"]
-        color_thief = ColorThief(track_image)
-        track_image_color = color_thief.get_color(quality=1)
-        db_track = crud.create_track(track_title, track_genre, track_artist, track_image, track_image_color, playlist_uri)
+        track_title = track["track_title"]
+        track_genre = track["track_genre"]
+        track_artist =track["track_artist"] 
+        track_image = track["track_image"]
+        print(track)
+        print(track_image)
+        # color_thief = ColorThief(track_image)
+        # (r, g, b) = color_thief.get_color(quality=1)
+        # track_image_color = [colorsys.rgb_to_hsv(r, g, b)]
+        track_image_color = 'blue'
+        db_track = crud.create_track(track_title, track_artist, track_image, track_image_color, playlist_uri)
+        genre = crud.create_genre(track_genre)
+        model.db.session.add(db_track)
+        model.db.session.add(genre)
+        model.db.session.commit()
+        track_genre = crud.create_track_genre(genre.id, db_track.id)
         tracks_in_db.append(db_track)
     tracks = tracks_in_db 
 

@@ -5,6 +5,9 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from colorthief import ColorThief
 
+import os, urllib.request
+
+
 auth_manager = SpotifyClientCredentials()
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
@@ -116,8 +119,15 @@ def make_playlist():
         track_genre = track['genre']
         track_artist = track['track_artist']
         track_image = track['track_image']
-        color_thief = ColorThief(track_image)
-        track_image_color = color_thief.get_color(quality=1)
+        def dominant_color_from_url(url,tmp_file='tmp.jpg'):
+            '''Downloads ths image file and analyzes the dominant color'''
+            urllib.urlretrieve(url, tmp_file)
+            color_thief = ColorThief(tmp_file)
+            dominant_color = color_thief.get_color(quality=1)
+            os.remove(tmp_file)
+            return dominant_color
+        track_image_color = dominant_color_from_url(track_image)
+        print(track_image_color)
         track = crud.create_track(track_title, track_genre, track_artist, track_image, track_image_color, playlist_uri)
         db.session.add(track)
     
@@ -134,3 +144,4 @@ def make_playlist():
 if __name__ == "__main__":
     connect_to_db(app)
     app.run(debug=True, host="0.0.0.0")
+
