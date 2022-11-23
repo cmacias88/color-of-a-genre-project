@@ -103,7 +103,7 @@ class Track(db.Model):
     track_title = db.Column(db.String, nullable=False)
     track_genre = db.Column(db.String, db.ForeignKey('genres.genre_id'), nullable=False)
     track_image = db.Column(db.String, nullable=False) 
-    track_image_color = db.Column(db.Tuple, nullable=False)
+    track_image_color = db.Column(db.String, nullable=False)
 
     genre = db.relationship("Genre", secondary="track_genres", back_populates="tracks")
     playlists = db.relationship("Playlist", secondary="playlist_tracks", back_populates="tracks")

@@ -107,6 +107,7 @@ function UserLogIn({handleSubmit, setUsername, setPassword}) {
     )
 };
 
+
 function PlaylistInput({handleSubmit, setPlaylist}) {
     return(
         <React.Fragment>
@@ -115,6 +116,9 @@ function PlaylistInput({handleSubmit, setPlaylist}) {
                 <div>
                     <label>Public Playlist Link</label>
                         <input type="text" id="playlist-link" onChange={(evt) => setPlaylist({ ...playlist, playlist_link: evt.target.value })}/>
+                </div>
+                <div>
+                    <input type="submit" value="Submit"/>
                 </div>
             </form>
         </React.Fragment>
