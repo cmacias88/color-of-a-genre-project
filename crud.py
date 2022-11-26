@@ -29,6 +29,21 @@ def create_playlist(playlist_uri, playlist_name):
     return playlist_given
 
 
+def create_track(track_title, track_artist, track_image, track_image_color):
+    """Create a track."""
+
+    track = Track.query.filter(Track.track_title == track_title, Track.track_artist == track_artist).first()
+
+    if track: 
+        return track
+    else:
+        return Track(track_title=track_title, 
+                track_artist=track_artist, 
+                track_image=track_image,
+                track_image_color=track_image_color
+                )
+
+
 def add_track_to_playlist(track_id, playlist_id):
     """Add track to a playlist."""
 
@@ -38,22 +53,6 @@ def add_track_to_playlist(track_id, playlist_id):
         return PlaylistTrack(playlist_id=playlist_id,
                             track_id=track_id)
     return playlist_track
-
-
-def create_track(track_title, track_genre, track_artist, track_image, track_image_color, playlist_uri):
-    """Create a track."""
-
-    track = Track.query.filter(Track.track_title == track_title, Track.track_artist == track_artist).first()
-
-    if track: 
-        return track
-    else:
-        return Track(track_title=track_title, 
-                track_genre=track_genre,
-                track_artist=track_artist, 
-                track_image=track_image,
-                track_image_color=track_image_color,
-                playlist_uri=playlist_uri)
 
 
 def get_all_tracks(playlist_id):
@@ -70,8 +69,19 @@ def create_genre(genre_name):
     genre = Genre.query.filter(Genre.genre_name == genre_name).first()
 
     if not genre: 
-        return Genre(genre_name = genre_name)
+        return Genre(genre_name=genre_name)
     return genre
+
+
+def create_track_genre(genre_id, track_id):
+    """Add track to a genre."""
+
+    track_genre = TrackGenre.query.filter(TrackGenre.genre_id == genre_id, TrackGenre.track_id == track_id).first()
+
+    if not track_genre:
+        return TrackGenre(genre_id=genre_id,
+                        track_id=track_id)
+    return track_genre
 
 
 def get_all_genres():

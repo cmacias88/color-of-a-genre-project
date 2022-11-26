@@ -47,29 +47,32 @@ for playlist in playlist_data:
 
     playlist_uri = playlist["playlist_uri"]
     playlist_name = playlist["playlist_name"]
+    db_playlist = crud.create_playlist(playlist_uri, playlist_name)
+    model.db.session.add(db_playlist)
+    model.db.session.commit()
+    playlist_id = db_playlist.playlist_id
     for track in playlist["tracks"]:
         track_title = track["track_title"]
         track_genre = track["track_genre"]
         track_artist =track["track_artist"] 
         track_image = track["track_image"]
-        print(track)
-        print(track_image)
-        # color_thief = ColorThief(track_image)
-        # (r, g, b) = color_thief.get_color(quality=1)
-        # track_image_color = [colorsys.rgb_to_hsv(r, g, b)]
         track_image_color = 'blue'
-        db_track = crud.create_track(track_title, track_artist, track_image, track_image_color, playlist_uri)
-        genre = crud.create_genre(track_genre)
+        db_track = crud.create_track(track_title, track_artist, track_image, track_image_color)
         model.db.session.add(db_track)
+        model.db.session.commit()
+
+        playlist_track = crud.add_track_to_playlist(db_track.track_id, playlist_id)
+        model.db.session.add(playlist_track)
+        model.db.session.commit()
+
+        genre = crud.create_genre(track_genre)
         model.db.session.add(genre)
         model.db.session.commit()
-        track_genre = crud.create_track_genre(genre.id, db_track.id)
-        tracks_in_db.append(db_track)
-    tracks = tracks_in_db 
 
-    db_playlist = crud.create_playlist(playlist_uri, playlist_name, tracks)
-    playlists_in_db.append(db_playlist)
+        track_genre = crud.create_track_genre(genre.genre_id, db_track.track_id)
+        model.db.session.add(track_genre)
+        model.db.session.commit()
+        
 
+    
 
-model.db.session.add_all(playlists_in_db)
-model.db.session.commit()
