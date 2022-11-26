@@ -10,16 +10,25 @@ import crud
 import model
 import server
 
+import os, urllib.request
+
 os.system('dropdb visualplaylist')
 os.system('createdb visualplaylist')
 
 model.connect_to_db(server.app)
 model.db.create_all()
 
+def dominant_color_from_url(url,tmp_file='tmp.jpg'):
+    '''Downloads the image file and analyzes the dominant color'''
+    urllib.request.urlretrieve(url, tmp_file)
+    color_thief = ColorThief(tmp_file)
+    dominant_color = color_thief.get_color(quality=1)
+    os.remove(tmp_file)
+    return dominant_color
 
 for n in range(5):
-    fname = f'Test{n}'
-    lname = f'Test{n}'
+    fname = f'First{n}'
+    lname = f'Last{n}'
     username = f'user{n}'
     password = 'test'
 
@@ -56,7 +65,8 @@ for playlist in playlist_data:
         track_genre = track["track_genre"]
         track_artist =track["track_artist"] 
         track_image = track["track_image"]
-        track_image_color = 'blue'
+        track_image_color = dominant_color_from_url(track_image)
+
         db_track = crud.create_track(track_title, track_artist, track_image, track_image_color)
         model.db.session.add(db_track)
         model.db.session.commit()
