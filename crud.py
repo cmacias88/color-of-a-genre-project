@@ -110,9 +110,23 @@ def create_visualization_data(playlist_uri):
 
     for track in tracks:
         track_genre = track.genre.name
+        (h, s, v) = track.track_image_color
+        track_genre_color = {
+                'black': [],
+                'white': [],
+                'red': [],
+                'green': [],
+                'blue': [],
+                'yellow': [],
+                'purple': [],
+                'orange': [],
+                'pink' : [],
+                'gray': []
+        }
         if not track_genre in track_genre_color:
             track_genre_color[track_genre] = []
-        track_genre_color[track_genre].append(track.track_image_color)
+        if (0 <= h <= 12) or (338 <= h <= 359) and (s > 7) and (v > 8):
+            
 
     # Need one visualization for the VisualizationData  
     # find library for sorting colors 

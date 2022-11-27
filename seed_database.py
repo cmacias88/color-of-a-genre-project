@@ -10,7 +10,7 @@ import crud
 import model
 import server
 
-import os, urllib.request
+import os, urllib.request, colorsys
 
 os.system('dropdb visualplaylist')
 os.system('createdb visualplaylist')
@@ -25,6 +25,16 @@ def dominant_color_from_url(url,tmp_file='tmp.jpg'):
     dominant_color = color_thief.get_color(quality=1)
     os.remove(tmp_file)
     return dominant_color
+
+
+def hsv_conversion(rgb_tuple):
+    rgb_copy = rgb_tuple[0:]
+    r, g, b = rgb_copy
+    (r, g, b) = (r / 255, g / 255, b / 255)
+    (h, s, v) = colorsys.rgb_to_hsv(r, g, b)
+    (h, s, v) = (int(h * 179), int(s * 255), int(v * 255))
+    return (h, s, v)
+
 
 for n in range(5):
     fname = f'First{n}'
@@ -65,23 +75,25 @@ for playlist in playlist_data:
         track_genre = track["track_genre"]
         track_artist =track["track_artist"] 
         track_image = track["track_image"]
-        track_image_color = dominant_color_from_url(track_image)
+        rgb_color = dominant_color_from_url(track_image)
+        track_image_color = hsv_conversion(rgb_color)
+        print(track_image_color)
 
-        db_track = crud.create_track(track_title, track_artist, track_image, track_image_color)
-        model.db.session.add(db_track)
-        model.db.session.commit()
+        # db_track = crud.create_track(track_title, track_artist, track_image, track_image_color)
+        # model.db.session.add(db_track)
+        # model.db.session.commit()
 
-        playlist_track = crud.add_track_to_playlist(db_track.track_id, playlist_id)
-        model.db.session.add(playlist_track)
-        model.db.session.commit()
+        # playlist_track = crud.add_track_to_playlist(db_track.track_id, playlist_id)
+        # model.db.session.add(playlist_track)
+        # model.db.session.commit()
 
-        genre = crud.create_genre(track_genre)
-        model.db.session.add(genre)
-        model.db.session.commit()
+        # genre = crud.create_genre(track_genre)
+        # model.db.session.add(genre)
+        # model.db.session.commit()
 
-        track_genre = crud.create_track_genre(genre.genre_id, db_track.track_id)
-        model.db.session.add(track_genre)
-        model.db.session.commit()
+        # track_genre = crud.create_track_genre(genre.genre_id, db_track.track_id)
+        # model.db.session.add(track_genre)
+        # model.db.session.commit()
         
 
     
