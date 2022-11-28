@@ -80,25 +80,25 @@ for playlist in playlist_data:
         (h, s, v) = hsv_conversion(rgb_color)
         if (0 <= h < 12) or (339 <= h <= 359) and (s > 7) and (v > 56):
             track_image_color = 'red'
-        if (12 <= h <= 41) and (s > 81) and (v > 56):
+        elif (12 <= h <= 41) and (s > 81) and (v > 56):
             track_image_color = 'orange'
-        if (42 <= h <= 69) and (s > 7) and (v > 8):
+        elif (42 <= h <= 69) and (s > 7) and (v > 8):
             track_image_color = 'yellow'
-        if (70 <= h <= 166) and (s > 7) and (v > 8):
+        elif (70 <= h <= 166) and (s > 7) and (v > 8):
             track_image_color = 'green'
-        if (167 <= h <= 251) and (s > 7) and (v > 8):
+        elif (167 <= h <= 251) and (s > 7) and (v > 8):
             track_image_color = 'blue'
-        if (252 <= h <= 305) and (s > 7) and (v > 8):
+        elif (252 <= h <= 305) and (s > 7) and (v > 8):
             track_image_color = 'purple'
-        if (306 <= h <= 338) and (s > 7) and (v > 8):
+        elif (306 <= h <= 338) and (s > 7) and (v > 8):
             track_image_color = 'pink'
-        if (3 < s < 5) and (20 < v > 92):
+        elif (s < 16) and (20 < v > 92):
             track_image_color = 'grey'
-        if (s < 5) and (v < 20):
+        elif (s < 5) and (v < 20) or (v == 0):
             track_image_color = 'black'
-        if (0 <= s < 3) and (v > 92):
+        elif (s < 3) and (v > 92):
             track_image_color = 'white'
-        if (12 < h < 35) and (20 < s < 81) and  (20 < v < 56):
+        elif (12 < h < 35) and (20 < s < 81) and  (20 < v < 56):
             track_image_color = 'brown'
         
 
