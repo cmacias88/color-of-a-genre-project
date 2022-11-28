@@ -110,23 +110,72 @@ def create_visualization_data(playlist_uri):
 
     for track in tracks:
         track_genre = track.genre.name
-        (h, s, v) = track.track_image_color
-        track_genre_color = {
-                'black': [],
-                'white': [],
-                'red': [],
-                'green': [],
-                'blue': [],
-                'yellow': [],
-                'purple': [],
-                'orange': [],
-                'pink' : [],
-                'gray': []
-        }
+        track_genre_color = {}
+
         if not track_genre in track_genre_color:
-            track_genre_color[track_genre] = []
-        if (0 <= h <= 12) or (338 <= h <= 359) and (s > 7) and (v > 8):
-            
+            track_genre_color[track_genre] = {}
+
+        track_image_color = track.track_image_color 
+
+        if track_image_color == 'red':
+            if not track_genre_color[track_genre]['red']:
+                track_genre_color[track_genre]['red'] = 1
+            else: 
+                track_genre_color[track_genre]['red'] += 1
+        elif track_image_color == 'orange':
+            if not track_genre_color[track_genre]['orange']:
+                track_genre_color[track_genre]['orange'] = 1
+            else: 
+                track_genre_color[track_genre]['orange'] += 1
+        elif track_image_color == 'yellow':
+            if not track_genre_color[track_genre]['yellow']:
+                track_genre_color[track_genre]['yellow'] = 1
+            else: 
+                track_genre_color[track_genre]['yellow'] += 1
+        elif track_image_color == 'green':
+            if not track_genre_color[track_genre]['green']:
+                track_genre_color[track_genre]['green'] = 1
+            else: 
+                track_genre_color[track_genre]['green'] += 1
+        elif track_image_color == 'blue':
+            if not track_genre_color[track_genre]['blue']:
+                track_genre_color[track_genre]['blue'] = 1
+            else: 
+                track_genre_color[track_genre]['blue'] += 1
+        elif track_image_color == 'purple':
+            if not track_genre_color[track_genre]['purple']:
+                track_genre_color[track_genre]['purple'] = 1
+            else: 
+                track_genre_color[track_genre]['purple'] += 1
+        elif track_image_color == 'pink':
+            if not track_genre_color[track_genre]['pink']:
+                track_genre_color[track_genre]['pink'] = 1
+            else: 
+                track_genre_color[track_genre]['pink'] += 1
+        elif track_image_color == 'grey':
+            if not track_genre_color[track_genre]['grey']:
+                track_genre_color[track_genre]['grey'] = 1
+            else: 
+                track_genre_color[track_genre]['grey'] += 1 
+        elif track_image_color == 'white':
+            if not track_genre_color[track_genre]['white']:
+                track_genre_color[track_genre]['white'] = 1
+            else: 
+                track_genre_color[track_genre]['white'] += 1
+        elif track_image_color == 'black':
+            if not track_genre_color[track_genre]['black']:
+                track_genre_color[track_genre]['black'] = 1
+            else: 
+                track_genre_color[track_genre]['black'] += 1
+        elif track_image_color == 'brown':
+            if not track_genre_color[track_genre]['brown']:
+                track_genre_color[track_genre]['brown'] = 1
+            else: 
+                track_genre_color[track_genre]['brown'] += 1
+
+    # for value in track_genre_color[track_genre].values():
+    #     genre_most_common_color = []
+
 
     # Need one visualization for the VisualizationData  
     # find library for sorting colors 
