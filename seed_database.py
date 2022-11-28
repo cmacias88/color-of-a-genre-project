@@ -29,6 +29,7 @@ def dominant_color_from_url(url,tmp_file='tmp.jpg'):
 
 
 def hsv_conversion(rgb_tuple):
+    """Converts rgb values into hsv format."""
     rgb_copy = rgb_tuple[0:]
     r, g, b = rgb_copy
     (r, g, b) = (r / 255, g / 255, b / 255)

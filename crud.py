@@ -87,7 +87,9 @@ def create_track_genre(genre_id, track_id):
 def get_all_genres():
     """Gives all genres."""
 
-    return Genre.query.all()
+    genre_pool = Genre.query.all()
+
+    return [one_genre.to_json() for one_genre in genre_pool]
 
 
 def create_visualization_data(playlist_uri):
