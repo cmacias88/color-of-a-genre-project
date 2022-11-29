@@ -177,7 +177,7 @@ function App() {
         fetch('/api/playlist-selection', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify(playlist_link)
+            body: JSON.stringify(playlist)
             })
         .then((response) => response.json())
         .then((playlist) => {if (playlist.playlist_link) {
@@ -205,7 +205,7 @@ function App() {
                 <ReactRouterDOM.Route exact path="/playlist-selection">
                     <PlaylistInput handleSubmit={handlePlaylistSubmit}/>
                 </ReactRouterDOM.Route>
-                <ReactRouterDOM.Route exact path="/visualization-generator">
+                <ReactRouterDOM.Route path={`/visualization-generator/${playlist.playlist_id}`}>
                     {/* <VisualizationGenerator /> */}
                 </ReactRouterDOM.Route>
                 <ReactRouterDOM.Route exact path="/spotify-authorization">

@@ -71,6 +71,7 @@ class Playlist(db.Model):
     user = db.relationship("User", back_populates="playlists")
     visualization = db.relationship("Visualization", back_populates="playlist")
 
+    visualization_data = db.relationship("PlaylistVisualizationData", secondary="playlist_visualizationdata", back_populates="playlist")
     tracks = db.relationship("Track", secondary="playlist_tracks", back_populates="playlists")
 
     def __repr__(self):
@@ -144,13 +145,26 @@ class VisualizationData(db.Model):
     visualizationdata_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     genre_percentage = db.Column(db.FLOAT, nullable=False)
     genre_most_common_color = db.Column(db.String, nullable=False)
-    genre_id = db.column(db.Integer, db.ForeignKey('genres.genre_id'))
     visualization_id = db.Column(db.Integer, db.ForeignKey('visualizations.visualization_id'), nullable=False)
 
+    playlist = db.relationship("PlaylistVisualizationData", secondary="playlist_visualizationdata", back_populates="visualization_data")
     visualization = db.relationship("Visualization", uselist=False, back_populates="visualization_data")
 
     def __repr__(self):
         return f"<Visualization Data id={self.visualizationdata_id} visualization_id={self.visualization_id}>"
+
+
+class PlaylistVisualizationData(db.Model):
+    """The visualization data for a given playlist."""
+
+    __tablename__ = "playlist_visualizationdata"
+
+    playlist_visualizationdata_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    playlist_id = db.Column(db.Integer, db.ForeignKey('playlist.playlist_id'), nullable=False)
+    visualizationdata_id = db.Column(db.Integer, db.ForeignKey('visualization_data.visualizationdata_id'), nullable=False)
+
+    def __repr__(self):
+        return f"<PlaylistVisualizationData id={self.playlist_visualizationdata_id} playlist={self.playlist_id} visualization_data={self.visualizationdata_id}>"
 
 
 def connect_to_db(flask_app, db_uri="postgresql:///visualplaylist", echo=True):

@@ -101,7 +101,6 @@ for playlist in playlist_data:
             track_image_color = 'white'
         elif (12 < h < 35) and (20 < s < 81) and  (20 < v < 56):
             track_image_color = 'brown'
-        
 
         db_track = crud.create_track(track_title, track_artist, track_image, track_image_color)
         model.db.session.add(db_track)
@@ -119,6 +118,9 @@ for playlist in playlist_data:
         model.db.session.add(track_genre)
         model.db.session.commit()
         
+        visualization_data = crud.create_visualization_data(playlist_id)
+        model.db.session.add(visualization_data)
+        model.db.session.commit()
 
     
 

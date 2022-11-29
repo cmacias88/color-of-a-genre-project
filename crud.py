@@ -1,4 +1,4 @@
-from model import db, User, Visualization, Playlist, PlaylistTrack, Genre, Track, TrackGenre, TrackVisualization, VisualizationData, connect_to_db
+from model import db, User, Visualization, Playlist, PlaylistTrack, Genre, Track, TrackGenre, TrackVisualization, VisualizationData, PlaylistVisualizationData, connect_to_db
 
 
 def create_user(fname, lname, username, password):
@@ -17,6 +17,12 @@ def get_user_by_username(username, password):
     """Gives user via their username."""
 
     return User.query.filter(User.username == username and User.password == password).first()
+
+
+def get_playlist_by_id(playlist_id):
+    """Gives playlist by id."""
+
+    return Playlist.query.filter(Playlist.playlist_id == playlist_id).first()
 
 
 def create_playlist(playlist_uri, playlist_name):
@@ -89,94 +95,22 @@ def get_all_genres():
 
     genre_pool = Genre.query.all()
 
-    return [one_genre.to_json() for one_genre in genre_pool]
+    return [genre.to_json() for genre in genre_pool]
 
 
-def create_visualization_data(playlist_uri):
+def create_visualization_data(genre_percentage, genre_most_common_color):
     """Create visualization data from a playlist."""
 
-    playlist = Playlist.query.filter(Playlist.playlist_uri == playlist_uri).first()
+    return VisualizationData(genre_percentage=genre_percentage,
+                            genre_most_common_color=genre_most_common_color)
+                            
 
-    tracks = playlist.tracks
-    track_nums = len(tracks)
+def get_visualization_data_for_visualization(playlist_id):
+    """Gives visualization data for a certain visualization."""
 
-    track_genre_count = {}
-    track_genre_color = {}
+    all_data = PlaylistVisualizationData.query.filter(PlaylistVisualizationData.playlist_id == playlist_id).all()
 
-    for track in tracks:
-        track_genre = track.genre.name
-        if not track_genre in track_genre_count:
-            track_genre_count[track_genre] = 1
-        else: 
-            track_genre_count[track_genre] += 1 
-
-    for track in tracks:
-        track_genre = track.genre.name
-        track_genre_color = {}
-
-        if not track_genre in track_genre_color:
-            track_genre_color[track_genre] = {}
-
-        track_image_color = track.track_image_color 
-
-        if track_image_color == 'red':
-            if not track_genre_color[track_genre]['red']:
-                track_genre_color[track_genre]['red'] = 1
-            else: 
-                track_genre_color[track_genre]['red'] += 1
-        elif track_image_color == 'orange':
-            if not track_genre_color[track_genre]['orange']:
-                track_genre_color[track_genre]['orange'] = 1
-            else: 
-                track_genre_color[track_genre]['orange'] += 1
-        elif track_image_color == 'yellow':
-            if not track_genre_color[track_genre]['yellow']:
-                track_genre_color[track_genre]['yellow'] = 1
-            else: 
-                track_genre_color[track_genre]['yellow'] += 1
-        elif track_image_color == 'green':
-            if not track_genre_color[track_genre]['green']:
-                track_genre_color[track_genre]['green'] = 1
-            else: 
-                track_genre_color[track_genre]['green'] += 1
-        elif track_image_color == 'blue':
-            if not track_genre_color[track_genre]['blue']:
-                track_genre_color[track_genre]['blue'] = 1
-            else: 
-                track_genre_color[track_genre]['blue'] += 1
-        elif track_image_color == 'purple':
-            if not track_genre_color[track_genre]['purple']:
-                track_genre_color[track_genre]['purple'] = 1
-            else: 
-                track_genre_color[track_genre]['purple'] += 1
-        elif track_image_color == 'pink':
-            if not track_genre_color[track_genre]['pink']:
-                track_genre_color[track_genre]['pink'] = 1
-            else: 
-                track_genre_color[track_genre]['pink'] += 1
-        elif track_image_color == 'grey':
-            if not track_genre_color[track_genre]['grey']:
-                track_genre_color[track_genre]['grey'] = 1
-            else: 
-                track_genre_color[track_genre]['grey'] += 1 
-        elif track_image_color == 'white':
-            if not track_genre_color[track_genre]['white']:
-                track_genre_color[track_genre]['white'] = 1
-            else: 
-                track_genre_color[track_genre]['white'] += 1
-        elif track_image_color == 'black':
-            if not track_genre_color[track_genre]['black']:
-                track_genre_color[track_genre]['black'] = 1
-            else: 
-                track_genre_color[track_genre]['black'] += 1
-        elif track_image_color == 'brown':
-            if not track_genre_color[track_genre]['brown']:
-                track_genre_color[track_genre]['brown'] = 1
-            else: 
-                track_genre_color[track_genre]['brown'] += 1
-
-    # for value in track_genre_color[track_genre].values():
-    #     genre_most_common_color = []
+    return [data.to_json() for data in all_data]
 
 
     # Need one visualization for the VisualizationData  
@@ -208,12 +142,6 @@ def create_visualization_data(playlist_uri):
 #     """Gives visualization for a certain playlist."""
 
 #     return Visualization.query.filter(Visualization.playlist_id == playlist_id).first()
-
-
-# def get_visualization_data_for_visualization(visualization_id):
-#     """Gives visualization data for a certain visualization."""
-
-#     return VisualizationData.query.filter(VisualizationData.visualization_id == visualization_id).first()
 
 
 if __name__ == '__main__':
