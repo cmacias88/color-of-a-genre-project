@@ -71,7 +71,7 @@ class Playlist(db.Model):
     user = db.relationship("User", back_populates="playlists")
     visualization = db.relationship("Visualization", back_populates="playlist")
 
-    visualization_data = db.relationship("PlaylistVisualizationData", secondary="playlist_visualizationdata", back_populates="playlist")
+    visualization_datas = db.relationship("Playlist", secondary="playlist_visualizationdata", back_populates="playlist")
     tracks = db.relationship("Track", secondary="playlist_tracks", back_populates="playlists")
 
     def __repr__(self):
@@ -147,7 +147,7 @@ class VisualizationData(db.Model):
     genre_most_common_color = db.Column(db.String, nullable=False)
     visualization_id = db.Column(db.Integer, db.ForeignKey('visualizations.visualization_id'), nullable=False)
 
-    playlist = db.relationship("PlaylistVisualizationData", secondary="playlist_visualizationdata", back_populates="visualization_data")
+    playlist = db.relationship("VisualizationData", secondary="playlist_visualizationdata", back_populates="visualization_datas")
     visualization = db.relationship("Visualization", uselist=False, back_populates="visualization_data")
 
     def __repr__(self):
@@ -160,7 +160,7 @@ class PlaylistVisualizationData(db.Model):
     __tablename__ = "playlist_visualizationdata"
 
     playlist_visualizationdata_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    playlist_id = db.Column(db.Integer, db.ForeignKey('playlist.playlist_id'), nullable=False)
+    playlist_id = db.Column(db.Integer, db.ForeignKey('playlists.playlist_id'), nullable=False)
     visualizationdata_id = db.Column(db.Integer, db.ForeignKey('visualization_data.visualizationdata_id'), nullable=False)
 
     def __repr__(self):

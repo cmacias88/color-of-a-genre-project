@@ -72,11 +72,18 @@ def get_all_tracks(playlist_id):
 def create_genre(genre_name):
     """Create a genre."""
 
-    genre = Genre.query.filter(Genre.genre_name == genre_name).first()
+    # genre_list = [
+    # "rock", "indie", "pop", "country", "rap", "hip hop", "jazz", 
+    # "classical", "metal", "alternative", "folk", "house", "punk"
+    # ]
 
-    if not genre: 
-        return Genre(genre_name=genre_name)
-    return genre
+    genre_list = Genre.query.filter(Genre.genre_name).all()
+
+    for genre in genre_list: 
+        if genre_name in genre.genre_name: 
+            return genre
+
+    return Genre(genre_name=genre_name)
 
 
 def create_track_genre(genre_id, track_id):
