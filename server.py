@@ -112,7 +112,6 @@ def make_playlist():
             return (h, s, v)
 
         playlist_id = db_playlist.playlist_id
-        tracks = sp.playlist_tracks(playlist_uri)
 
         tracks = sp.playlist_tracks(playlist_uri)
         for track in tracks:
