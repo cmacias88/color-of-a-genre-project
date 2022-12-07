@@ -118,6 +118,36 @@ for playlist in playlist_data:
         model.db.session.add(track_genre)
         model.db.session.commit()
         
+        total_track_num = len(db_playlist.tracks)
+
+        track_genre_info = {}
+
+        for track in db_playlist.tracks:
+            track_genre_name = track.genre
+            print(track_genre_name)
+        #     if not track_genre_info[track_genre_name]:
+        #         track_genre_info[track_genre_name]['count'] = 1
+        #         track_genre_info[track_genre_name]['colors'] = {}
+        #     else: 
+        #         track_genre_info[track_genre_name]['count'] += 1
+
+        # for track in db_playlist.tracks:
+        #     track_color = track.track_image_color
+        #     for track_genre in track_genre_info: 
+        #         if not track_genre['colors'][track_color]:
+        #             track_genre['colors'][track_color] = 1
+        #         else: 
+        #             track_genre['colors'][track_color] += 1
+
+        # print(track_genre_info)
+
+        # for genre in track_genre_info: 
+        #     genre_percentage = ((track_genre_info[genre])/total_track_num) * 100
+        #     for color, color_total in genre['colors'].items():
+        #         genre_most_common_color = ['', 0]
+        #         if color_total > most_common_color[1]:
+        #             most_common_color = [color, color_total]
+
         # visualization_data = crud.create_visualization_data(playlist_id)
         # model.db.session.add(visualization_data)
         # model.db.session.commit()
