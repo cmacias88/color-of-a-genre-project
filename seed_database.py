@@ -118,9 +118,9 @@ for playlist in playlist_data:
         model.db.session.add(track_genre)
         model.db.session.commit()
         
-        visualization_data = crud.create_visualization_data(playlist_id)
-        model.db.session.add(visualization_data)
-        model.db.session.commit()
+        # visualization_data = crud.create_visualization_data(playlist_id)
+        # model.db.session.add(visualization_data)
+        # model.db.session.commit()
 
     
 
