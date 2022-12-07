@@ -86,8 +86,8 @@ def make_playlist():
     user_playlist = sp.playlist(playlist_link)
 
     if user_playlist != None:
-        playlist_name = user_playlist['name']
-        playlist_uri : user_playlist['uri'] 
+        playlist_name = user_playlist['items']['name']
+        playlist_uri : user_playlist['items']['uri'] 
         db_playlist = crud.create_playlist(playlist_uri, playlist_name)
 
         db.session.add(db_playlist)
@@ -113,12 +113,16 @@ def make_playlist():
 
         playlist_id = db_playlist.playlist_id
 
-        tracks = sp.playlist_tracks(playlist_uri)
-        for track in tracks:
-            track_title = track["track_title"]
-            track_genre = track["track_genre"]
-            track_artist =track["track_artist"] 
-            track_image = track["track_image"]
+        results = sp.playlist_tracks(playlist_uri)
+        for item in results['items']:
+            track = item['track']
+            track_artist_uri = track['artists'][0]['uri']
+            track_artist_info = sp.artist(track_artist_uri)
+
+            track_title = track['name']
+            track_artist = track['artists'][0]['name']
+            track_genre = track_artist_info['genres'][0]
+            track_image = track['album']['images'][0]['url']
             rgb_color = dominant_color_from_url(track_image)
             (h, s, v) = hsv_conversion(rgb_color)
             if (0 <= h < 12) or (339 <= h <= 359) and (s > 7) and (v > 56):
@@ -166,7 +170,7 @@ def make_playlist():
                         }), redirect('visualization-generator/<playlist_id>')
 
 
-@app.route('api/visualization-generator/<playlist_id>', methods=['POST'])
+@app.route('/api/visualization-generator/<playlist_id>', methods=['POST'])
 def make_visualization_data(playlist_id):
     """Generates visualization from a playlist."""
 
