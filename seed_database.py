@@ -123,8 +123,8 @@ for playlist in playlist_data:
         track_genre_info = {}
 
         for track in db_playlist.tracks:
-            track_genre_name = track.genre
-            print(track_genre_name)
+            track_id = track.track_id
+            track_genre_name = crud.get_track_genre_name(track_id)
         #     if not track_genre_info[track_genre_name]:
         #         track_genre_info[track_genre_name]['count'] = 1
         #         track_genre_info[track_genre_name]['colors'] = {}

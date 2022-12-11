@@ -98,6 +98,18 @@ def create_track_genre(genre_id, track_id):
     return track_genre
 
 
+def get_track_genre_name(track_id):
+    """Add track to a genre."""
+
+    track_match = TrackGenre.query.filter(TrackGenre.track_id == track_id).first()
+
+    genre_match = track_match.genre_id
+
+    genre = Genre.query.filter(Genre.genre_id == genre_match).first()
+
+    return genre.genre_name
+
+
 def get_all_genres():
     """Gives all genres."""
 
