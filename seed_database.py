@@ -125,21 +125,23 @@ for playlist in playlist_data:
         for track in db_playlist.tracks:
             track_id = track.track_id
             track_genre_name = crud.get_track_genre_name(track_id)
-        #     if not track_genre_info[track_genre_name]:
-        #         track_genre_info[track_genre_name]['count'] = 1
-        #         track_genre_info[track_genre_name]['colors'] = {}
-        #     else: 
-        #         track_genre_info[track_genre_name]['count'] += 1
+            if track_genre_name in track_genre_info:
+                track_genre_info[track_genre_name]['count'] += 1
+            else: 
+                track_genre_info[track_genre_name] = {}
+                track_genre_info[track_genre_name]['count'] = 1
+                track_genre_info[track_genre_name]['colors'] = {}
+            track_color = track.track_image_color
+            for genre, values in track_genre_info.items():
+                if track_genre_name == genre: 
+                    if track_color in values['colors']:
+                        values['colors'][track_color] += 1 
+                    else:
+                        values['colors'][track_color] = 1
 
-        # for track in db_playlist.tracks:
-        #     track_color = track.track_image_color
-        #     for track_genre in track_genre_info: 
-        #         if not track_genre['colors'][track_color]:
-        #             track_genre['colors'][track_color] = 1
-        #         else: 
-        #             track_genre['colors'][track_color] += 1
-
-        # print(track_genre_info)
+        print()
+        print(track_genre_info)
+        print()
 
         # for genre in track_genre_info: 
         #     genre_percentage = ((track_genre_info[genre])/total_track_num) * 100
