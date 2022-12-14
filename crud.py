@@ -99,7 +99,7 @@ def create_track_genre(genre_id, track_id):
 
 
 def get_track_genre_name(track_id):
-    """Add track to a genre."""
+    """Get genre name from a specific track."""
 
     track_match = TrackGenre.query.filter(TrackGenre.track_id == track_id).first()
 
@@ -110,6 +110,14 @@ def get_track_genre_name(track_id):
     return genre.genre_name
 
 
+def get_genre_id(genre_name):
+    """Get genre id from a genre name."""
+
+    genre = Genre.query.filter(Genre.genre_name == genre_name).first()
+
+    return genre.genre_id
+
+
 def get_all_genres():
     """Gives all genres."""
 
@@ -118,12 +126,26 @@ def get_all_genres():
     return [genre.to_json() for genre in genre_pool]
 
 
-def create_visualization_data(genre_percentage, genre_most_common_color):
+def create_visualization_data(genre_percentage, genre_most_common_color, genre_name):
     """Create visualization data from a playlist."""
 
     return VisualizationData(genre_percentage=genre_percentage,
-                            genre_most_common_color=genre_most_common_color)
-                            
+                            genre_most_common_color=genre_most_common_color, 
+                            genre_name = genre_name)
+
+
+def create_playlist_visualization_data(visualizationdata_id, playlist_id):
+    """Create playlist's visualization data."""
+
+    playlistvisualization_data = PlaylistVisualizationData.query.filter(PlaylistVisualizationData.playlist_id == playlist_id, 
+                                                                        PlaylistVisualizationData.visualizationdata_id == visualizationdata_id).first()
+
+
+    if not playlistvisualization_data: 
+        return PlaylistVisualizationData(visualizationdata_id = visualizationdata_id, 
+                                    playlist_id = playlist_id)
+    return playlistvisualization_data
+
 
 def get_visualization_data_for_visualization(playlist_id):
     """Gives visualization data for a certain visualization."""

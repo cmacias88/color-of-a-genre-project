@@ -117,11 +117,10 @@ for playlist in playlist_data:
         track_genre = crud.create_track_genre(genre.genre_id, db_track.track_id)
         model.db.session.add(track_genre)
         model.db.session.commit()
-        
+
         total_track_num = len(db_playlist.tracks)
-
         track_genre_info = {}
-
+    
         for track in db_playlist.tracks:
             track_id = track.track_id
             track_genre_name = crud.get_track_genre_name(track_id)
@@ -139,20 +138,25 @@ for playlist in playlist_data:
                     else:
                         values['colors'][track_color] = 1
 
-        print()
-        print(track_genre_info)
-        print()
 
-        # for genre in track_genre_info: 
-        #     genre_percentage = ((track_genre_info[genre])/total_track_num) * 100
-        #     for color, color_total in genre['colors'].items():
-        #         genre_most_common_color = ['', 0]
-        #         if color_total > most_common_color[1]:
-        #             most_common_color = [color, color_total]
+    for genre, values in track_genre_info.items(): 
+        genre_id = crud.get_genre_id(genre)
+        for color, color_total in values['colors'].items():
+            genre_most_common_color = ['', 0]
+            if color_total > genre_most_common_color[1]:
+                genre_most_common_color = [(color, color_total)]
+            elif color_total >= genre_most_common_color[1]:
+                genre_most_common_color.append((color, color_total))
+        genre_most_common_color = color
+        genre_percentage = ((values['count'])/total_track_num) * 100
 
-        # visualization_data = crud.create_visualization_data(playlist_id)
-        # model.db.session.add(visualization_data)
-        # model.db.session.commit()
+        visualization_data = crud.create_visualization_data(genre_percentage, genre_most_common_color, genre)
+        model.db.session.add(visualization_data)
+        model.db.session.commit()
 
-    
+        playlist_visualization_data = crud.create_playlist_visualization_data(visualization_data.visualizationdata_id, playlist_id)
+        model.db.session.add(playlist_visualization_data)
+        model.db.session.commit()
+
+
 

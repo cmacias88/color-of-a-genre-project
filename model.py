@@ -145,7 +145,8 @@ class VisualizationData(db.Model):
     visualizationdata_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     genre_percentage = db.Column(db.FLOAT, nullable=False)
     genre_most_common_color = db.Column(db.String, nullable=False)
-    visualization_id = db.Column(db.Integer, db.ForeignKey('visualizations.visualization_id'), nullable=False)
+    genre_name = db.Column(db.String, nullable=False)
+    visualization_id = db.Column(db.Integer, db.ForeignKey('visualizations.visualization_id'))
 
     playlist = db.relationship("Playlist", secondary="playlist_visualizationdata", back_populates="visualization_datas")
     visualization = db.relationship("Visualization", uselist=False, back_populates="visualization_data")
