@@ -2,45 +2,65 @@ const Link = ReactRouterDOM.Link;
 const Route = ReactRouterDOM.Route;
 
 
-function NavBar () {
-    return (
-        <nav>
-            <ReactRouterDOM.Link to="/" className="navbar">
-                <span>  Home  </span>
-            </ReactRouterDOM.Link>
-            <ReactRouterDOM.Link to="/user-profile" className="navbar">
-                <span>  My Profile  </span>
-            </ReactRouterDOM.Link>
-            <ReactRouterDOM.Link to="/playlist-selection" className="navbar">
-                <span>  Playlist Selection  </span>
-            </ReactRouterDOM.Link>
-            <ReactRouterDOM.Link to="/spotify-authorization" className="navbar">
-                <span>  Spotify Authorization </span>
-            </ReactRouterDOM.Link>
-        </nav>
-    )
-}
+// function NavBar ({loggedIn, handleLogOut}) {
+
+//     if (loggedIn){
+//         return (
+//             <nav>
+//                 <ReactRouterDOM.Link to="/" className="navbar">
+//                     <span>  Home  </span>
+//                 </ReactRouterDOM.Link>
+//                 <ReactRouterDOM.Link to="/playlist-selection" className="navbar">
+//                     <span>  Playlist Selection  </span>
+//                 </ReactRouterDOM.Link>
+//                 <ReactRouterDOM.Link to="/spotify-authorization" className="navbar">
+//                     <span>  Spotify Authorization </span>
+//                 </ReactRouterDOM.Link>
+//             </nav>
+//         );
+//     } else {
+//         return (
+//             <nav>
+//                 <ReactRouterDOM.Link to="/" className="navbar">
+//                     <span>  Home  </span>
+//                 </ReactRouterDOM.Link>
+//                 <ReactRouterDOM.Link to="/user-profile" className="navbar">
+//                     <span>  My Profile  </span>
+//                 </ReactRouterDOM.Link>
+//                 <ReactRouterDOM.Link to="/playlist-selection" className="navbar">
+//                     <span>  Playlist Selection  </span>
+//                 </ReactRouterDOM.Link>
+//                 <ReactRouterDOM.Link to="/spotify-authorization" className="navbar">
+//                     <span>  Spotify Authorization </span>
+//                 </ReactRouterDOM.Link>
+//                 <ReactRouterDOM.Link to="/" onClick={handleLogOut} className="navbar">
+//                     <span>  Logout  </span>
+//                 </ReactRouterDOM.Link>
+//             </nav>
+//         );
+//     }
+// }
 
 
-function Homepage() {
-    return (
-    <React.Fragment>
-    <h1>Welcome!</h1>
+// function Homepage() {
+//     return (
+//     <React.Fragment>
+//     <h1>Welcome!</h1>
 
-    <p>
-        Become a user and link your Spotify account to see a visualization of:
-            <li>the percentage of genres in a playlist of your choosing</li>
-	        <li>the most common colors of albums in those given genres</li>
-    </p>
+//     <p>
+//         Become a user and link your Spotify account to see a visualization of:
+//             <li>the percentage of genres in a playlist of your choosing</li>
+// 	        <li>the most common colors of albums in those given genres</li>
+//     </p>
 
-    <div>
-        <li><Link to="/log-in">Already have an account? Log In Here</Link></li>
-        <li><Link to="/sign-up">Want to save your visualizations? Sign Up Here</Link></li>
-        <li><Link to="/playlist-selection">Or simply generate a visualization with a public playlist!</Link></li>
-    </div>
-    </React.Fragment>
-    )
-}
+//     <div>
+//         <li><Link to="/log-in">Already have an account? Log In Here</Link></li>
+//         <li><Link to="/sign-up">Want to save your visualizations? Sign Up Here</Link></li>
+//         <li><Link to="/playlist-selection">Or simply generate a visualization with a public playlist!</Link></li>
+//     </div>
+//     </React.Fragment>
+//     )
+// }
 
 
 function Dashboard({user}) {
@@ -51,6 +71,44 @@ function Dashboard({user}) {
 
 
 function UserSignUp({handleSubmit, setUser}) {
+
+    const [fname, setFname] = React.useState("");
+    const [lname, setLname] = React.useState("");
+    const [username, setUsername] = React.useState("");
+    const [password, setPassword] = React.useState("");
+
+    const [data, setData] = React.useState({
+        password: "",
+        showPassword: false,
+    });
+
+    let handleSubmit = async (evt) => {
+        evt.preventDefault();
+
+        let newUser = await fetch("/create", {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                fname: fname,
+                lname: lname,
+                email: email,
+                password: password,
+            }),
+        });
+
+        if(newUser.status===200){
+            alert("Congratulations, your account has been created and you can now login!");
+            location.reload();
+
+        } else if (newUser.status===401) {
+            alert("Sorry, that email is already being used. Please try again with a different email.");
+            location.reload();
+        }
+    };
+
     return(
     <React.Fragment>
         <form id="sign-up" onSubmit={handleSubmit}>
@@ -83,18 +141,25 @@ function UserSignUp({handleSubmit, setUser}) {
 };
 
 
-function UserLogIn({handleSubmit, setUsername, setPassword}) {
+function UserLogIn({handleLogIn, setUsername, setPassword}) {
+    
+    const [data, setData] = React.useState({
+        password: "",
+        showPassword: false,
+    });
+
+
     return(
     <React.Fragment>
-        <form id="log-in" onSubmit={handleSubmit}>
+        <form id="log-in" onSubmit={handleLogIn}>
         <h1>Log In</h1>
             <div>
                 <label>Username</label>
-                    <input type="text" id="username" onChange={(evt) => setUsername({ ...user, username: evt.target.value })}/>
+                    <input type="text" id="username" onChange={setUsername}/>
             </div>
             <div>
                 <label>Password</label>
-                    <input type="password" id="password" onChange={(evt) => setPassword({ ...user, password: evt.target.value })}/>
+                    <input type={data.showPassword ? "text" : "password"} id="password" name="password" onChange={setPassword}/>
             </div>
             <div>
                 <input type="submit" value="Log In"/>
@@ -129,12 +194,13 @@ function PlaylistInput({handleSubmit, setPlaylist}) {
 
 function App() {
 
-    const [loggedIn, setLoggedIn] = React.useState(false)
+    let [user, setUser] = React.useState({id: Number(localStorage.getItem("userId")),
+                                            fname: localStorage.getItem("userFName"),
+                                            lname: localStorage.getItem("userLName"),
+                                            email: localStorage.getItem("userEmail"),
+                                            password: localStorage.getItem("userPassword")});
 
-    const [user, setUser] = React.useState({fname: "",
-                                            lname: "",
-                                            username: "",
-                                            password: "" });
+    let [loggedIn, setLoggedIn] = React.useState(JSON.parse(localStorage.getItem("isLoggedIn")));
 
     const [playlist, setPlaylist] = React.useState({playlist_link: ""});
 
