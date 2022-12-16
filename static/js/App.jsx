@@ -70,107 +70,111 @@ function Dashboard({user}) {
 }
 
 
-function UserSignUp({handleSubmit, setUser}) {
+// function UserSignUp({handleSubmit, setFname, setLname, setUsername, setPassword}) {
 
-    const [fname, setFname] = React.useState("");
-    const [lname, setLname] = React.useState("");
-    const [username, setUsername] = React.useState("");
-    const [password, setPassword] = React.useState("");
+//     const [fname, setFname] = React.useState("");
+//     const [lname, setLname] = React.useState("");
+//     const [username, setUsername] = React.useState("");
+//     const [password, setPassword] = React.useState("");
 
-    const [data, setData] = React.useState({
-        password: "",
-        showPassword: false,
-    });
+//     const [data, setData] = React.useState({
+//         password: "",
+//         showPassword: false,
+//     });
 
-    let handleSubmit = async (evt) => {
-        evt.preventDefault();
+//     const handleSubmit = async (evt) => {
+//         evt.preventDefault();
+//         let newUser = await fetch('/api/sign-up', { 
+//             method: 'POST',
+//             headers: { 
+//                 'Accept': 'application/json',
+//                 'Content-Type': 'application/json'},
+//             body: JSON.stringify({
+//                 fname: fname,
+//                 lname: lname,
+//                 username: username,
+//                 password: password,
+//                 }),
+//             });
 
-        let newUser = await fetch("/create", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                fname: fname,
-                lname: lname,
-                email: email,
-                password: password,
-            }),
-        });
-
-        if(newUser.status===200){
-            alert("Congratulations, your account has been created and you can now login!");
-            location.reload();
-
-        } else if (newUser.status===401) {
-            alert("Sorry, that email is already being used. Please try again with a different email.");
-            location.reload();
-        }
-    };
-
-    return(
-    <React.Fragment>
-        <form id="sign-up" onSubmit={handleSubmit}>
-        <h1>Sign Up</h1>
-            <div>
-                <label>First Name</label>
-                    <input type="text" onChange={(evt) => setUser({ ...user, fname: evt.target.value })}/>
-            </div>
-            <div>
-                <label>Last Name</label>
-                    <input type="text" onChange={(evt) => setUser({ ...user, lname: evt.target.value })}/>
-            </div>
-            <div>
-                <label>Username</label>
-                    <input type="text" onChange={(evt) => setUser({ ...user, username: evt.target.value })}/>
-            </div>
-            <div>
-                <label>Password</label>
-                    <input type="password" onChange={(evt) => setUser({ ...user, password: evt.target.value })}/>
-            </div>
-            <div>
-                <input type="submit" value="Sign Up"/>
-            </div>
-        </form>
-        <p>
-            <Link to="/log-in">Already registered?</Link>
-        </p>
-    </React.Fragment>
-    )
-};
-
-
-function UserLogIn({handleLogIn, setUsername, setPassword}) {
+//         if(newUser.status===200){
+//             alert("You have successfully made an account.");
+//             location.reload();
     
-    const [data, setData] = React.useState({
-        password: "",
-        showPassword: false,
-    });
+//         } else if (newUser.status===401) {
+//             alert("An account already exists with that username. Please try again.");
+//             location.reload();
+//         }
+//     //     .then((response) => response.json())
+//     //     .then((user_info) => {if (user_info.username) {
+//     //         setLoggedIn(true);
+//     //         };
+//     //     });
+//     };
 
 
-    return(
-    <React.Fragment>
-        <form id="log-in" onSubmit={handleLogIn}>
-        <h1>Log In</h1>
-            <div>
-                <label>Username</label>
-                    <input type="text" id="username" onChange={setUsername}/>
-            </div>
-            <div>
-                <label>Password</label>
-                    <input type={data.showPassword ? "text" : "password"} id="password" name="password" onChange={setPassword}/>
-            </div>
-            <div>
-                <input type="submit" value="Log In"/>
-            </div>
-        </form>
-        <p>
-            <Link to="/sign-up">Don't have an account?</Link>
-        </p>
-    </React.Fragment>
-    )
-};
+//     return(
+//     <React.Fragment>
+//         <form id="sign-up" onSubmit={handleSubmit}>
+//         <h1>Sign Up</h1>
+//             <div>
+//                 <label>First Name</label>
+//                     <input type="text" onChange={(evt) => setFname(evt.target.value)}/>
+//             </div>
+//             <div>
+//                 <label>Last Name</label>
+//                     <input type="text" onChange={(evt) => setLname(evt.target.value)}/>
+//             </div>
+//             <div>
+//                 <label>Username</label>
+//                     <input type="text" onChange={(evt) => setUsername(evt.target.value)}/>
+//             </div>
+//             <div>
+//                 <label>Password</label>
+//                     <input type={data.showPassword ? "text" : "password"} id="password" name="password" onChange={(evt) => setPassword(evt.target.value)}/>
+//             </div>
+//             <div>
+//                 <input type="submit" value="Sign Up"/>
+//             </div>
+//         </form>
+//         <p>
+//             <Link to="/log-in">Already registered?</Link>
+//         </p>
+//     </React.Fragment>
+//     )
+// };
+
+
+// function UserLogIn({handleLogIn, setUsername, setPassword}) {
+    
+//     const [data, setData] = React.useState({
+//         password: "",
+//         showPassword: false,
+//     });
+
+
+//     return(
+//     <React.Fragment>
+//         <form id="log-in" onSubmit={handleLogIn}>
+//         <h1>Log In</h1>
+//             <div>
+//                 <label>Username</label>
+//                     <input type="text" id="username" onChange={setUsername}/>
+//             </div>
+//             <div>
+//                 <label>Password</label>
+//                     <input type={data.showPassword ? "text" : "password"} id="password" name="password" onChange={setPassword}/>
+//             </div>
+//             <div>
+//                 <input type="submit" value="Log In"/>
+//             </div>
+//         </form>
+//         <p>
+//             <Link to="/sign-up">Don't have an account?</Link>
+//         </p>
+//     </React.Fragment>
+//     )
+// };
 
 
 function PlaylistInput({handleSubmit, setPlaylist}) {
@@ -195,29 +199,28 @@ function PlaylistInput({handleSubmit, setPlaylist}) {
 function App() {
 
     let [user, setUser] = React.useState({id: Number(localStorage.getItem("userId")),
-                                            fname: localStorage.getItem("userFName"),
-                                            lname: localStorage.getItem("userLName"),
-                                            email: localStorage.getItem("userEmail"),
+                                            fname: localStorage.getItem("userFname"),
+                                            lname: localStorage.getItem("userLname"),
+                                            username: localStorage.getItem("userUsername"),
                                             password: localStorage.getItem("userPassword")});
 
     let [loggedIn, setLoggedIn] = React.useState(JSON.parse(localStorage.getItem("isLoggedIn")));
 
     const [playlist, setPlaylist] = React.useState({playlist_link: ""});
 
-
-    const handleSignUpSubmit = (evt) => {
-        evt.preventDefault();
-        fetch('/api/sign-up', { 
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json'},
-            body: JSON.stringify(user)
-            })
-        .then((response) => response.json())
-        .then((user_info) => {if (user_info.username) {
-            setLoggedIn(true);
-            };
-        });
-    };
+    // const handleSignUpSubmit = (evt) => {
+    //     evt.preventDefault();
+    //     fetch('/api/sign-up', { 
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json'},
+    //         body: JSON.stringify(user)
+    //         })
+    //     .then((response) => response.json())
+    //     .then((user_info) => {if (user_info.username) {
+    //         setLoggedIn(true);
+    //         };
+    //     });
+    // };
 
 
     const handleLogInSubmit = (evt) => {
