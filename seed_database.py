@@ -66,6 +66,7 @@ tracks_in_db = []
 
 for playlist in playlist_data:
 
+    user_id = 1
     playlist_uri = playlist["playlist_uri"]
     playlist_name = playlist["playlist_name"]
     db_playlist = crud.create_playlist(playlist_uri, playlist_name)

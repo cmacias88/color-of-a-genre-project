@@ -71,7 +71,7 @@ function App() {
                 username:"",
                 password:""});
         
-        let removeUser = await fetch("/logout", {
+        let removeUser = await fetch("/log-out", {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
@@ -94,28 +94,28 @@ function App() {
 
     return (
         <ReactRouterDOM.BrowserRouter>
-                <NavBar loggedIn={loggedIn} handleLogOut={handleLogout}/>
+                <NavBar loggedIn={loggedIn} handleLogout={handleLogout}/>
                     <ReactRouterDOM.Route exact path="/">
                         <Homepage />
                     </ReactRouterDOM.Route>
                     <ReactRouterDOM.Route exact path="/sign-up">
                         <UserSignUp />
                     </ReactRouterDOM.Route>
+                    <ReactRouterDOM.Route exact path="/my-profile">
+                        <UserVisualizations />
+                    </ReactRouterDOM.Route>
                     <ReactRouterDOM.Route exact path="/log-in">
-                        <UserLogIn handleLogIn={handleLogIn} />
+                        {loggedIn ? <ReactRouterDOM.Redirect to={"/my-profile"} />:
+                        <UserLogIn handleLogIn={handleLogIn}
+                        setUsername={(evt) => setUser({ ...user, username: evt.target.value })}
+                        setPassword={(evt) => setUser({ ...user, password: evt.target.value })} />}
                     </ReactRouterDOM.Route>
-                    {/* <ReactRouterDOM.Route exact path="/user-profile"> */}
-                        {/* <UserProfile /> */}
-                    {/* </ReactRouterDOM.Route>
                     <ReactRouterDOM.Route exact path="/playlist-selection">
-                        <PlaylistInput handleSubmit={handlePlaylistSubmit}/>
+                        <PlaylistInput/>
                     </ReactRouterDOM.Route>
-                    <ReactRouterDOM.Route path={`/visualization-generator/${playlist.playlist_id}`}> */}
-                        {/* <VisualizationGenerator /> */}
-                    {/* </ReactRouterDOM.Route>
-                    <ReactRouterDOM.Route exact path="/spotify-authorization">
-                        <SpotifyAuth />
-                    </ReactRouterDOM.Route> */}
+                    {/* <ReactRouterDOM.Route path={`/visualization-generator/${playlist.playlist_id}`}>
+                        <VisualizationGenerator />
+                    </ReactRouterDOM.Route>  */}
         </ReactRouterDOM.BrowserRouter>
     );
 }

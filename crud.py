@@ -155,15 +155,6 @@ def get_visualization_data_for_visualization(playlist_id):
     return [data.to_json() for data in all_data]
 
 
-    # Need one visualization for the VisualizationData  
-    # find library for sorting colors 
-
-    # return VisualizationData(
-    #     genre_percentage=genre_percentage, 
-    #     genre_most_common_color=genre_most_common_color 
-    # )
-
-
 # def create_visualization(user_id, playlist_id, visualization_data):
 #     """Create and return a new visualization."""
 
@@ -174,10 +165,18 @@ def get_visualization_data_for_visualization(playlist_id):
 #     )
 
 
-# def get_all_user_visualizations(user_id):
-#     """Gives all visualizations under a certain user."""
+def get_all_user_visualizations(user_id):
+    """Gives all visualizations under a certain user."""
 
-#     return Visualization.query.filter(Visualization.user_id == user_id).all()
+    user_playlists = Playlist.query.filter(Playlist.user_id == user_id).all()
+
+    user_visualizations = []
+
+    for playlist in user_playlists: 
+        visualization_data = playlist.visualization_datas
+        user_visualizations.append(visualization_data)
+
+    return [visualization.to_json() for visualization in user_visualizations]
 
 
 # def get_visualization_by_playlist(playlist_id):

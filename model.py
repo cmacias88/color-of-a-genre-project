@@ -15,7 +15,6 @@ class User(db.Model):
     lname = db.Column(db.String, nullable=False)
     username = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
-    spotify_id = db.Column(db.String, unique=True)
 
     playlists = db.relationship("Playlist", back_populates="user")
     visualizations = db.relationship("Visualization", back_populates="user")
