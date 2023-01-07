@@ -78,9 +78,10 @@ def check_user_login():
 
 @app.route("/log-out", methods=['POST'])
 def user_logout():
-    """Logout"""
+    """Logging out the user."""
     
     session.pop('user', None)
+    flash('You have been logged out.')
 
     return redirect("/")
 
@@ -91,7 +92,7 @@ def get_all_genres_json():
 
     genres = crud.get_all_genres()
 
-    return jsonify({'genres': genres})
+    return jsonify({"genres": genres})
 
 
 @app.route('/playlist-selection', methods=['POST'])
@@ -179,16 +180,19 @@ def make_playlist():
             db.session.add(track_genre)
             db.session.commit()
 
-        return jsonify({'playlist_uri': playlist_uri,
-                        'playlist_name': playlist_name,
-                        }), redirect('visualization-generator/<playlist_id>')
+        return redirect('/visualization-generator/<playlist_id>')
 
 
-@app.route('/api/visualization-generator/<playlist_id>', methods=['POST'])
+@app.route('/visualization-data/<playlist_id>')
 def make_visualization_data(playlist_id):
-    """Generates visualization from a playlist."""
+    """Generates visualization data from a playlist."""
+
+    genre_percentages = {}
 
     playlist = crud.get_playlist_by_id(playlist_id)
+
+    playlist_name = playlist.playlist_name
+    playlist_uri = playlist.playlist_uri
 
     total_track_num = len(playlist.tracks)
 
@@ -221,6 +225,7 @@ def make_visualization_data(playlist_id):
                 genre_most_common_color.append((color, color_total))
         genre_most_common_color = color
         genre_percentage = ((values['count'])/total_track_num) * 100
+        genre_percentages[genre] = genre_percentage
 
         visualization_data = crud.create_visualization_data(genre_percentage, genre_most_common_color, genre)
         db.session.add(visualization_data)
@@ -230,9 +235,9 @@ def make_visualization_data(playlist_id):
         db.session.add(playlist_visualization_data)
         db.session.commit()
 
-    playlist_visualization_data = crud.get_visualization_data_for_visualization(playlist_id)
-
-    return jsonify({'visualization_data': playlist_visualization_data})
+    return jsonify({"playlist_name": playlist_name, 
+                    "playlist_uri": playlist_uri,
+                    "genres": genre_percentages})
 
 
 @app.route('/my-profile')
@@ -241,7 +246,7 @@ def get_user_visualizations(user_id):
 
     user_visualizations = crud.get_all_user_visualizations(user_id)
 
-    return jsonify(user_visualizations)
+    return user_visualizations
 
 
 if __name__ == "__main__":

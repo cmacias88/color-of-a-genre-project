@@ -173,8 +173,9 @@ def get_all_user_visualizations(user_id):
     user_visualizations = []
 
     for playlist in user_playlists: 
+        playlist_name = playlist.playlist_name 
         visualization_data = playlist.visualization_datas
-        user_visualizations.append(visualization_data)
+        user_visualizations.append({playlist_name: playlist_name, visualization_data: visualization_data})
 
     return [visualization.to_json() for visualization in user_visualizations]
 

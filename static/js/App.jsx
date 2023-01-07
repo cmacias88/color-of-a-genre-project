@@ -105,7 +105,7 @@ function App() {
                         <UserVisualizations />
                     </ReactRouterDOM.Route>
                     <ReactRouterDOM.Route exact path="/log-in">
-                        {loggedIn ? <ReactRouterDOM.Redirect to={"/my-profile"} />:
+                        {loggedIn ? <ReactRouterDOM.Redirect to={"/my-profile/"} />:
                         <UserLogIn handleLogIn={handleLogIn}
                         setUsername={(evt) => setUser({ ...user, username: evt.target.value })}
                         setPassword={(evt) => setUser({ ...user, password: evt.target.value })} />}
@@ -113,9 +113,9 @@ function App() {
                     <ReactRouterDOM.Route exact path="/playlist-selection">
                         <PlaylistInput/>
                     </ReactRouterDOM.Route>
-                    {/* <ReactRouterDOM.Route path={`/visualization-generator/${playlist.playlist_id}`}>
+                    <ReactRouterDOM.Route path={`/visualization-generator/${playlist.playlist_id}`}>
                         <VisualizationGenerator />
-                    </ReactRouterDOM.Route>  */}
+                    </ReactRouterDOM.Route> 
         </ReactRouterDOM.BrowserRouter>
     );
 }
