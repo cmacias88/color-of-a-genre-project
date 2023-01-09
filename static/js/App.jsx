@@ -8,6 +8,8 @@ function App() {
 
     let [loggedIn, setLoggedIn] = React.useState(JSON.parse(localStorage.getItem("isLoggedIn")));
 
+    // let [validPlaylist, setvalidPlaylist] = React.useState(JSON.parse(localStorage.getItem("isValidPlaylist")));
+
     let handleLogIn = async (evt) => {
         evt.preventDefault();
 
@@ -50,6 +52,7 @@ function App() {
         }
     };
 
+
     function setSession() {
         localStorage.setItem("userId", user.id);
         localStorage.setItem("userFname", user.fname);
@@ -83,6 +86,7 @@ function App() {
         });
     };
 
+
     React.useEffect(() => {
         const isLoggedIn = localStorage.getItem("isLoggedIn");
         if (isLoggedIn === 'true') {
@@ -92,6 +96,41 @@ function App() {
         }
     }, []);
 
+
+    // const handlePlaylistSubmit = async (evt) => {
+    //     evt.preventDefault();
+    //     let newPlaylist = await fetch('/playlist-selection', { 
+    //         method: "POST",
+    //         headers: { 
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json'
+    //             },
+    //         body: JSON.stringify({
+    //             playlist_name: playlist_name, 
+    //             playlist_uri: playlist_uri, 
+    //             tracks: tracks
+    //             }),
+    //         });
+
+    //     if(newPlaylist.status===200){
+    //         ;setvalidPlaylist(true);
+    //         localStorage.setItem("isValidPlaylist", true);
+
+    //     } else if (newPlaylist.status===401) {
+    //         window.flash("The playlist URL you entered is not valid. Please try again.");
+    //         location.reload();
+    //     };
+    // };
+
+    // React.useEffect(() => {
+    //     const isValidPlaylist = localStorage.getItem("isValidPlaylist");
+    //     if (isValidPlaylist === 'true') {
+    //         setvalidPlaylist(true);
+    //     } else {
+    //         setvalidPlaylist(false);
+    //     }
+    // }, []);
+
     return (
         <ReactRouterDOM.BrowserRouter>
                 <NavBar loggedIn={loggedIn} handleLogout={handleLogout}/>
@@ -99,23 +138,28 @@ function App() {
                         <Homepage />
                     </ReactRouterDOM.Route>
                     <ReactRouterDOM.Route exact path="/sign-up">
-                        <UserSignUp />
+                        {loggedIn ? <ReactRouterDOM.Redirect to={"/"} />:
+                        <UserSignUp user={user}/>}
                     </ReactRouterDOM.Route>
                     <ReactRouterDOM.Route exact path="/my-profile">
-                        <UserVisualizations />
+                        <AllUserVisualizations/>
                     </ReactRouterDOM.Route>
                     <ReactRouterDOM.Route exact path="/log-in">
-                        {loggedIn ? <ReactRouterDOM.Redirect to={"/my-profile/"} />:
+                        {loggedIn ? <ReactRouterDOM.Redirect to={"/"} />:
                         <UserLogIn handleLogIn={handleLogIn}
                         setUsername={(evt) => setUser({ ...user, username: evt.target.value })}
                         setPassword={(evt) => setUser({ ...user, password: evt.target.value })} />}
                     </ReactRouterDOM.Route>
-                    <ReactRouterDOM.Route exact path="/playlist-selection">
-                        <PlaylistInput/>
+                    {/* <ReactRouterDOM.Route exact path="/playlist-selection">
+                        {validPlaylist ? <ReactRouterDOM.Redirect to={`/visualization-generator/${playlist.playlist_id}`} />:
+                        <PlaylistInput handlePlaylistSubmit={handlePlaylistSubmit}/>}
                     </ReactRouterDOM.Route>
-                    <ReactRouterDOM.Route path={`/visualization-generator/${playlist.playlist_id}`}>
+                    <ReactRouterDOM.Route exact path="/visualization-generator/:playlist_id">
                         <VisualizationGenerator />
-                    </ReactRouterDOM.Route> 
+                    </ReactRouterDOM.Route>  */}
+                    {/* <ReactRouterDOM.Route exact path="/browse-visualizations">
+                        <AllVisualizations/>
+                    </ReactRouterDOM.Route> */}
         </ReactRouterDOM.BrowserRouter>
     );
 }

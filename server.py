@@ -64,12 +64,12 @@ def check_user_login():
         if username == user.username and password == user.password:
             session['user'] = user.user_id
             return jsonify({
-                "id": user.user_id,
+                "user_id": user.user_id,
                 "fname": user.fname,
                 "lname": user.lname,
                 "username": user.username,
                 "password": user.password
-            })
+            }), redirect("/my-profile")
         else:
             return "", "Incorrect password, please try again."
     else: 
@@ -99,7 +99,7 @@ def get_all_genres_json():
 def make_playlist():
     """Creates a playlist."""
 
-    playlist_link = request.json.get('playlist')
+    playlist_link = request.json.get('playlist_link')
 
     user_playlist = sp.playlist(playlist_link)
 
@@ -164,6 +164,9 @@ def make_playlist():
                 track_image_color = 'white'
             elif (12 < h < 35) and (20 < s < 81) and  (20 < v < 56):
                 track_image_color = 'brown'
+
+            track_list = []
+
             db_track = crud.create_track(track_title, track_artist, track_image, track_image_color)
             db.session.add(db_track)
             db.session.commit()
@@ -180,7 +183,16 @@ def make_playlist():
             db.session.add(track_genre)
             db.session.commit()
 
-        return redirect('/visualization-generator/<playlist_id>')
+            track_list.append({"track_id": db_track.track_id,
+                                "track_title": db_track.track_title,
+                                "track_artist": db_track.track_artist,
+                                "track_image": db_track.track_image,
+                                "track_image_color": db_track.track_image_color,
+                                "track_genre": genre.genre_name})
+        
+        return jsonify({"playlist_name": playlist_name, 
+                    "playlist_uri": playlist_uri,
+                    "tracks": track_list})
 
 
 @app.route('/visualization-data/<playlist_id>')
@@ -247,6 +259,15 @@ def get_user_visualizations(user_id):
     user_visualizations = crud.get_all_user_visualizations(user_id)
 
     return user_visualizations
+
+
+@app.route('/browse-visualizations')
+def get_all_visualizations():
+    """View all visualizations in a database."""
+
+    all_visualizations = crud.get_all_user_visualizations()
+
+    return all_visualizations
 
 
 if __name__ == "__main__":

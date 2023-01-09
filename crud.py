@@ -152,7 +152,15 @@ def get_visualization_data_for_visualization(playlist_id):
 
     all_data = PlaylistVisualizationData.query.filter(PlaylistVisualizationData.playlist_id == playlist_id).all()
 
-    return [data.to_json() for data in all_data]
+    return all_data
+
+
+def get_all_visualizations():
+    """Gives visualization data for a certain visualization."""
+
+    all_visualizations = VisualizationData.query.all()
+
+    return [visualization.to_json() for visualization in all_visualizations]
 
 
 # def create_visualization(user_id, playlist_id, visualization_data):
