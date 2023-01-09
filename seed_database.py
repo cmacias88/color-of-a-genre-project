@@ -69,7 +69,7 @@ for playlist in playlist_data:
     user_id = 1
     playlist_uri = playlist["playlist_uri"]
     playlist_name = playlist["playlist_name"]
-    db_playlist = crud.create_playlist(playlist_uri, playlist_name)
+    db_playlist = crud.create_playlist(playlist_uri, playlist_name, user_id)
     model.db.session.add(db_playlist)
     model.db.session.commit()
     playlist_id = db_playlist.playlist_id

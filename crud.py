@@ -25,13 +25,15 @@ def get_playlist_by_id(playlist_id):
     return Playlist.query.filter(Playlist.playlist_id == playlist_id).first()
 
 
-def create_playlist(playlist_uri, playlist_name):
+def create_playlist(playlist_uri, playlist_name, user_id=None):
     """Create a playlist."""
 
     playlist_given = Playlist.query.filter(Playlist.playlist_uri == playlist_uri).first()
 
     if playlist_given == None:
-        return Playlist(playlist_uri=playlist_uri, playlist_name=playlist_name)
+        return Playlist(playlist_uri=playlist_uri, 
+                        playlist_name=playlist_name,
+                        user_id=user_id)
     return playlist_given
 
 
